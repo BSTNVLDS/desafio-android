@@ -12,6 +12,7 @@ import com.squareup.picasso.Picasso
 class PullAdapter() :RecyclerView.Adapter<PullAdapter.PullHolder>(){
     var list :List<Pull> = emptyList()
     var close :List<Pull> = emptyList()
+    var open :List<Pull> = emptyList()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         PullHolder(LayoutInflater.from(parent.context)
             .inflate(R.layout.item_pull,parent,false))
@@ -34,11 +35,13 @@ class PullAdapter() :RecyclerView.Adapter<PullAdapter.PullHolder>(){
     fun addList(nueva:List<Pull> ) {
         for(pull in nueva){
             if(pull.state == "open"){
-                this.list += pull
+                this.open += pull
             }else{
                 this.close+=pull
             }
         }
+        this.list += this.open
+        this.list +=this.close
 
         notifyDataSetChanged()
     }

@@ -49,7 +49,7 @@ class RequestPullList : AppCompatActivity() {
                 if (call.isSuccessful) {
                     val pullreq = call.body() ?: emptyList()
                     adapter.addList(pullreq.map { Pull(it.title,it.body,it.state,it.user) })
-                    val open_count =adapter.list.size
+                    val open_count =adapter.open.size
                     val close_count =adapter.close.size
                     binding.opens.text= "$open_count Opens"
                     binding.closed.text= "$close_count Closed"
