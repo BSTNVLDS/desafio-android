@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="gris">#343438</color>
+    <color name="lavanda">#99A1A3</color>
+    <color name="lavandav">#D1D5D6</color>
+    <color name="azul">#3977AA</color>
+    <color name="amarillo">#DF9305</color>
+    <color name="negro">#191919</color>
+    <color name="blanco">#FFFFFFFF</color>
+
+</resources>
