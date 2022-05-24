@@ -5,12 +5,10 @@ import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
 import cl.accenture.githubjavapop.R
-import cl.accenture.githubjavapop.databinding.ItemRepoBinding
 import cl.accenture.githubjavapop.model.Repo
-import com.squareup.picasso.Picasso
 
 class RepoAdapter() :
-    RecyclerView.Adapter<RepoAdapter.RepoHolder>(), View.OnClickListener {
+    RecyclerView.Adapter<RepoHolder>(), View.OnClickListener {
     private var listener: View.OnClickListener? = null
     var list :List<Repo> = emptyList()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepoHolder {
@@ -32,21 +30,6 @@ class RepoAdapter() :
     }
 
     override fun getItemCount() = list.size
-
-    inner class RepoHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val binding = ItemRepoBinding.bind(itemView)
-         fun bind(repo: Repo){
-            binding.name.text = repo.name
-            binding.descrip.text= repo.description
-            binding.stars.text= repo.watchers
-            binding.forks.text= repo.forks
-             binding.nameUser.text = repo.owner!!.login
-            binding.loginUser.text= repo.owner!!.login
-            Picasso.get().load(repo.owner!!.avatar_url).into(binding.imageg)
-
-
-        }
-    }
 
     fun addList(nueva:List<Repo> ) {
         this.list += nueva
