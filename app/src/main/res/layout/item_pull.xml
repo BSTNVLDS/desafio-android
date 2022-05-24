@@ -31,45 +31,60 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 </LinearLayout>
-    <LinearLayout
-        android:layout_marginStart="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/image_pull"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="5dp"
-            android:scaleType="centerCrop"
-            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent" />
-<LinearLayout
-    android:layout_gravity="center_vertical"
-    android:orientation="vertical"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
-
-
-        <TextView
-            android:textStyle="bold"
-            android:textSize="15sp"
-            android:textColor="@color/blue"
-            android:id="@+id/nameUserpull"
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_marginStart="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Name" />
+            android:orientation="horizontal">
 
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/image_pull"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="5dp"
+                android:scaleType="centerCrop"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent" />
+            <LinearLayout
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+
+                <TextView
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:textColor="@color/blue"
+                    android:id="@+id/nameUserpull"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Name" />
+
+                <TextView
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:textColor="@color/lavender"
+                    android:id="@+id/loginUserpull"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="login" />
+            </LinearLayout>
+        </LinearLayout>
         <TextView
+            android:layout_alignParentEnd="true"
             android:textStyle="bold"
-            android:textSize="15sp"
-            android:textColor="@color/lavender"
-            android:id="@+id/loginUserpull"
+            android:textSize="16sp"
+            android:textColor="@color/yellow"
+            android:id="@+id/state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sobrenombre" />
-</LinearLayout>
-    </LinearLayout>
+            android:text="" />
+    </RelativeLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
