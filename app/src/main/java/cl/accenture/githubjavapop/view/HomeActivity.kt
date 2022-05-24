@@ -2,6 +2,7 @@ package cl.accenture.githubjavapop.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,6 +14,7 @@ import cl.accenture.githubjavapop.databinding.ActivityHomeBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding :ActivityHomeBinding
@@ -51,10 +53,24 @@ class HomeActivity : AppCompatActivity() {
                         .create(APIService::class.java).getGithubByPage("repositories?q=language:Java&sort=stars&per_page&page=$query")
                     runOnUiThread{
                         if(call.isSuccessful){
-                            adapter.addList(call.body()?.repo ?: emptyList())
+                            var tempList =call.body()?.repo ?: emptyList()
+                            CoroutineScope(Dispatchers.IO).launch {
+                                for (repo in tempList){
+                                    val call2 = Conexion.getRetrofit("https://api.github.com/users/")
+                                        .create(APIService::class.java).getNameByUser(repo.owner?.login.toString())
+                                repo.owner?.name =call2.body()?.name
+                                   runOnUiThread{
+                                       adapter.addList(repo)
+                                   }
+
+                                }
+
+                            }
+
                         }else{
-                            Toast.makeText(applicationContext,"error",Toast.LENGTH_SHORT).show()
-                        }
+                            val error_code = call.code()
+                            Toast.makeText(applicationContext,"error code: $error_code", Toast.LENGTH_SHORT)
+                                .show()                        }
                     }
 
                 }

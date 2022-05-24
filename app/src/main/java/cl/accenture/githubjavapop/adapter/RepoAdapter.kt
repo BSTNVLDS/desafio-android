@@ -31,8 +31,8 @@ class RepoAdapter() :
 
     override fun getItemCount() = list.size
 
-    fun addList(nueva:List<Repo> ) {
-        this.list += nueva
+    fun addList(repo :Repo ) {
+        this.list += repo
         notifyDataSetChanged()
     }
 

@@ -13,7 +13,7 @@ class RepoHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         binding.descrip.text= repo.description
         binding.stars.text= repo.watchers
         binding.forks.text= repo.forks
-        binding.nameUser.text = repo.owner!!.login
+        binding.nameUser.text = repo.owner!!.name
         binding.loginUser.text= repo.owner!!.login
         Picasso.get().load(repo.owner!!.avatar_url).into(binding.imageg)
 
