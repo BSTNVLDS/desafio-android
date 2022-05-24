@@ -24,7 +24,7 @@ class PullAdapter() :RecyclerView.Adapter<PullHolder>(){
             if(pull.state == "open") open += pull
             else close+=pull
         }
-        list += open
+        list = open+list
         list +=close
 
         notifyDataSetChanged()
