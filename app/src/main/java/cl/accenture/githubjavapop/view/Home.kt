@@ -48,7 +48,7 @@ class Home : AppCompatActivity() {
             private fun pagination(query:Int){
                 CoroutineScope(Dispatchers.IO).launch {
                     val call = Conexion.getRetrofit("https://api.github.com/search/")
-                        .create(APIService::class.java).getGithubByPage("repositories?q=language:Java&sort=stars&page=$query")
+                        .create(APIService::class.java).getGithubByPage("repositories?q=language:Java&sort=stars&per_page&page=$query")
                     runOnUiThread{
                         if(call.isSuccessful){
                             adapter.addList(call.body()?.repo ?: emptyList())
