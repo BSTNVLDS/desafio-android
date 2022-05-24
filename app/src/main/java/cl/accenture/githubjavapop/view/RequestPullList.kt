@@ -14,7 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class DetalleRepositorio : AppCompatActivity() {
+class RequestPullList : AppCompatActivity() {
     private lateinit var binding :ActivityDetalleRepositorioBinding
     private var adapter = PullAdapter()
 

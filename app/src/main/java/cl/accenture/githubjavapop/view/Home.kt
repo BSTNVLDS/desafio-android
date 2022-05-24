@@ -32,7 +32,7 @@ class Home : AppCompatActivity() {
         binding.rc.adapter = adapter
         adapter.setOnclickListener {
             val select = adapter.lista[binding.rc.getChildAdapterPosition(it)]
-            startActivity( Intent(this@Home, DetalleRepositorio::class.java)
+            startActivity( Intent(this@Home, RequestPullList::class.java)
                 .putExtra("repo",select.name).putExtra("usuario",select.owner!!.login))
         }
         binding.rc.addOnScrollListener(object : RecyclerView.OnScrollListener() {

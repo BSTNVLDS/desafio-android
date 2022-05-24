@@ -13,7 +13,7 @@
         android:theme="@style/Theme.GithubJavaPop">
 
         <activity
-            android:name=".view.DetalleRepositorio"
+            android:name=".view.RequestPullList"
             android:exported="false" />
         <activity
             android:name=".view.Home"
