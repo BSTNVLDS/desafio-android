@@ -40,7 +40,7 @@ class RequestPullList : AppCompatActivity() {
     private fun cargarLista(fullname: String) {
         CoroutineScope(Dispatchers.IO).launch {
             val call = Conexion.getRetrofit("https://api.github.com/repos/")
-                .create(APIService::class.java).getPullByRepo("$fullname/pulls")
+                .create(APIService::class.java).getPullByRepo("$fullname/pulls?per_page=100&state=all&page=1")//requires pagination
             runOnUiThread {
                 if (call.isSuccessful) {
                     val pullreq = call.body() ?: emptyList()
