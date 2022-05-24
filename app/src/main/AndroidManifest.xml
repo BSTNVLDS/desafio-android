@@ -13,8 +13,7 @@
         android:theme="@style/Theme.GithubJavaPop">
 
         <activity
-            android:name=".view.RequestPullList"
-            android:exported="false" />
+            android:name=".view.RequestPullList" />
         <activity
             android:name=".view.HomeActivity"
             android:exported="true">
