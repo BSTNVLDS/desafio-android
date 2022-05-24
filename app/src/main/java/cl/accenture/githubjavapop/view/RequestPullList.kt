@@ -16,8 +16,7 @@ import kotlinx.coroutines.launch
 
 class RequestPullList : AppCompatActivity() {
     private lateinit var binding :ActivityDetalleRepositorioBinding
-    private var adapter = PullAdapter()
-
+    private val adapter = PullAdapter()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetalleRepositorioBinding.inflate(layoutInflater)
@@ -27,8 +26,14 @@ class RequestPullList : AppCompatActivity() {
         val usuario = extra.getString("usuario")
         title = repo
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        cargarLista("$usuario/$repo")
+
+        for(i in 1..2){
+            cargarLista("$usuario/$repo",i)
+        }
+
+
         initRecycleView()
+
     }
 
     private fun initRecycleView() {
@@ -37,15 +42,14 @@ class RequestPullList : AppCompatActivity() {
 
     }
 
-    private fun cargarLista(fullname: String) {
+    private fun cargarLista(fullname: String,page:Int) {
         CoroutineScope(Dispatchers.IO).launch {
             val call = Conexion.getRetrofit("https://api.github.com/repos/")
-                .create(APIService::class.java).getPullByRepo("$fullname/pulls?per_page=100&state=all&page=1")//requires pagination
+                .create(APIService::class.java).getPullByRepo("$fullname/pulls?per_page=100&state=all&page=$page")//requires pagination
             runOnUiThread {
                 if (call.isSuccessful) {
                     val pullreq = call.body() ?: emptyList()
                     adapter.addList(pullreq.map { Pull(it.title, it.body, it.user) })
-                    adapter.notifyDataSetChanged()
                     val abiertos =adapter.lista.size
                     binding.abiertos.text= "$abiertos Abiertos"
                 } else {
