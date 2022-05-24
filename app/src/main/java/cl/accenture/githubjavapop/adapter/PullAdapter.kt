@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import cl.accenture.githubjavapop.R
 import cl.accenture.githubjavapop.databinding.ItemPullBinding
-import cl.accenture.githubjavapop.modelo.Pull
+import cl.accenture.githubjavapop.model.Pull
 import com.squareup.picasso.Picasso
 
 class PullAdapter() :RecyclerView.Adapter<PullAdapter.PullHolder>(){

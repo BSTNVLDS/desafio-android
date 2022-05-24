@@ -1,4 +1,4 @@
-package cl.accenture.githubjavapop.modelo
+package cl.accenture.githubjavapop.model
 
 class Pull {
     var title :String? = null

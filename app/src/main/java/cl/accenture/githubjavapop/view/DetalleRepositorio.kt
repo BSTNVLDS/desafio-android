@@ -1,4 +1,4 @@
-package cl.accenture.githubjavapop.vista
+package cl.accenture.githubjavapop.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,7 +9,7 @@ import cl.accenture.githubjavapop.adapter.PullAdapter
 import cl.accenture.githubjavapop.conexion.APIService
 import cl.accenture.githubjavapop.controller.Conexion
 import cl.accenture.githubjavapop.databinding.ActivityDetalleRepositorioBinding
-import cl.accenture.githubjavapop.modelo.Pull
+import cl.accenture.githubjavapop.model.Pull
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

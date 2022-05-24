@@ -1,4 +1,4 @@
-package cl.accenture.githubjavapop.modelo
+package cl.accenture.githubjavapop.model
 
 class Owner {
     var avatar_url: String? = null

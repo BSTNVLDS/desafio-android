@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import cl.accenture.githubjavapop.R
 import cl.accenture.githubjavapop.databinding.ItemRepoBinding
-import cl.accenture.githubjavapop.modelo.Repo
+import cl.accenture.githubjavapop.model.Repo
 import com.squareup.picasso.Picasso
 
 class RepoAdapter() :

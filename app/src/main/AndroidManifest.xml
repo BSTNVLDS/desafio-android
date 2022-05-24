@@ -13,10 +13,10 @@
         android:theme="@style/Theme.GithubJavaPop">
 
         <activity
-            android:name=".vista.DetalleRepositorio"
+            android:name=".view.DetalleRepositorio"
             android:exported="false" />
         <activity
-            android:name=".vista.Home"
+            android:name=".view.Home"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

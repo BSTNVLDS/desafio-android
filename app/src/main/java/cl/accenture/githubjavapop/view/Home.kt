@@ -1,4 +1,4 @@
-package cl.accenture.githubjavapop.vista
+package cl.accenture.githubjavapop.view
 
 import android.content.Intent
 import android.os.Bundle
