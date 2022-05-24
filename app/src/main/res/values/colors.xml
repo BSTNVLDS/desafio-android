@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="gris">#343438</color>
-    <color name="lavanda">#99A1A3</color>
-    <color name="lavandav">#D1D5D6</color>
-    <color name="azul">#3977AA</color>
-    <color name="amarillo">#DF9305</color>
-    <color name="negro">#191919</color>
-    <color name="blanco">#FFFFFFFF</color>
+    <color name="grey">#343438</color>
+    <color name="lavender">#99A1A3</color>
+    <color name="light_lavender">#D1D5D6</color>
+    <color name="blue">#3977AA</color>
+    <color name="yellow">#DF9305</color>
+    <color name="black">#191919</color>
+    <color name="white">#FFFFFFFF</color>
 
 </resources>

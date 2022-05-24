@@ -6,7 +6,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <LinearLayout
         android:padding="5dp"
-        android:background="@color/lavandav"
+        android:background="@color/light_lavender"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -14,21 +14,21 @@
             android:drawableLeft="@drawable/ico_pull"
             android:textStyle="bold"
             android:textSize="16sp"
-            android:textColor="@color/amarillo"
-            android:id="@+id/abiertos"
+            android:textColor="@color/yellow"
+            android:id="@+id/opens"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0 Abiertos" />
+            android:text="0 Opens" />
         <TextView
             android:layout_marginStart="10dp"
             android:drawableLeft="@drawable/ico_check"
             android:textStyle="bold"
             android:textSize="16sp"
-            android:textColor="@color/negro"
-            android:id="@+id/cerrados"
+            android:textColor="@color/black"
+            android:id="@+id/closed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0 Cerrados" />
+            android:text="0 Closed" />
     </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcr"

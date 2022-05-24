@@ -14,7 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class Home : AppCompatActivity() {
+class HomeActivity : AppCompatActivity() {
     private lateinit var binding :ActivityHomeBinding
     private var adapter= RepoAdapter()
     private var page = 1
@@ -23,17 +23,17 @@ class Home : AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         pagination(page)
-       cargar()
+       load()
 
     }
 
-    private fun cargar() {
+    private fun load() {
         binding.rc.layoutManager = LinearLayoutManager(this)
         binding.rc.adapter = adapter
         adapter.setOnclickListener {
-            val select = adapter.lista[binding.rc.getChildAdapterPosition(it)]
-            startActivity( Intent(this@Home, RequestPullList::class.java)
-                .putExtra("repo",select.name).putExtra("usuario",select.owner!!.login))
+            val select = adapter.list[binding.rc.getChildAdapterPosition(it)]
+            startActivity( Intent(this@HomeActivity, RequestPullList::class.java)
+                .putExtra("repo",select.name).putExtra("user",select.owner!!.login))
         }
         binding.rc.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -53,7 +53,7 @@ class Home : AppCompatActivity() {
                         if(call.isSuccessful){
                             adapter.addList(call.body()?.repo ?: emptyList())
                         }else{
-                            Toast.makeText(applicationContext,"falla de conexion",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(applicationContext,"error",Toast.LENGTH_SHORT).show()
                         }
                     }
 

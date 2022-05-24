@@ -10,33 +10,33 @@ import cl.accenture.githubjavapop.model.Pull
 import com.squareup.picasso.Picasso
 
 class PullAdapter() :RecyclerView.Adapter<PullAdapter.PullHolder>(){
-    var lista :List<Pull> = emptyList()
-    var todo :List<Pull> = emptyList()
+    var list :List<Pull> = emptyList()
+    var close :List<Pull> = emptyList()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         PullHolder(LayoutInflater.from(parent.context)
             .inflate(R.layout.item_pull,parent,false))
 
     override fun onBindViewHolder(holder: PullHolder, position: Int)
-    = holder.bind(lista[position])
+    = holder.bind(list[position])
 
-    override fun getItemCount() = lista.size
+    override fun getItemCount() = list.size
 
     inner class PullHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val binding = ItemPullBinding.bind(itemView)
         fun bind(pull: Pull){
-            binding.nombrePull.text = pull.title
+            binding.namePull.text = pull.title
            binding.bodyPull.text= pull.body
-            binding.nombreUsuariopull.text= pull.user!!.login
-           binding.sobrenombreUsuariopull.text= pull.user!!.login
+            binding.namePull.text= pull.user!!.login
+           binding.loginUserpull.text= pull.user!!.login
         Picasso.get().load(pull.user!!.avatar_url).into(binding.imagePull)
         }
     }
     fun addList(nueva:List<Pull> ) {
         for(pull in nueva){
             if(pull.state == "open"){
-                this.lista += pull
+                this.list += pull
             }else{
-                this.todo+=pull
+                this.close+=pull
             }
         }
 

@@ -12,7 +12,7 @@ import com.squareup.picasso.Picasso
 class RepoAdapter() :
     RecyclerView.Adapter<RepoAdapter.RepoHolder>(), View.OnClickListener {
     private var listener: View.OnClickListener? = null
-    var lista :List<Repo> = emptyList()
+    var list :List<Repo> = emptyList()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepoHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_repo,parent,false)
@@ -21,7 +21,7 @@ class RepoAdapter() :
     }
 
     override fun onBindViewHolder(holder: RepoHolder, position: Int)
-    = holder.bind(lista[position])
+    = holder.bind(list[position])
 
     fun setOnclickListener(listener: View.OnClickListener?) {
         this.listener = listener
@@ -31,17 +31,17 @@ class RepoAdapter() :
         if (listener != null) listener!!.onClick(view)
     }
 
-    override fun getItemCount() = lista.size
+    override fun getItemCount() = list.size
 
     inner class RepoHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val binding = ItemRepoBinding.bind(itemView)
          fun bind(repo: Repo){
-            binding.nombre.text = repo.name
-            binding.descripcion.text= repo.description
-            binding.estrellas.text= repo.watchers
+            binding.name.text = repo.name
+            binding.descrip.text= repo.description
+            binding.stars.text= repo.watchers
             binding.forks.text= repo.forks
-             binding.nombreUsuario.text = repo.owner!!.login.toString()
-            binding.sobrenombreUsuario.text= repo.owner!!.login
+             binding.nameUser.text = repo.owner!!.login
+            binding.loginUser.text= repo.owner!!.login
             Picasso.get().load(repo.owner!!.avatar_url).into(binding.imageg)
 
 
@@ -49,11 +49,11 @@ class RepoAdapter() :
     }
 
     fun addList(nueva:List<Repo> ) {
-        this.lista += nueva
+        this.list += nueva
         notifyDataSetChanged()
     }
 
     fun remplazar(pos: Int, nombre:String) {
-      lista[pos].owner!!.login =nombre
+      list[pos].owner!!.login =nombre
    }
 }

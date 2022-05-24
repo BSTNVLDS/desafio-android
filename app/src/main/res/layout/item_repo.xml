@@ -23,11 +23,11 @@
             <TextView
                 android:textStyle="bold"
                 android:textSize="19sp"
-                android:textColor="@color/azul"
-                android:id="@+id/nombre"
+                android:textColor="@color/blue"
+                android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nombre de Repositorio" />
+                 />
 
             <TextView
 
@@ -35,11 +35,11 @@
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:maxLines="2"
-                android:textColor="@color/negro"
-                android:id="@+id/descripcion"
+                android:textColor="@color/black"
+                android:id="@+id/descrip"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text=" Descripcion\n Descripcion" />
+                 />
 
             <LinearLayout
                 android:layout_marginTop="10dp"
@@ -50,7 +50,7 @@
                     android:drawableLeft="@drawable/ico_fork"
                     android:textStyle="bold"
                     android:textSize="19sp"
-                    android:textColor="@color/amarillo"
+                    android:textColor="@color/yellow"
                     android:id="@+id/forks"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -59,8 +59,8 @@
                     android:drawableLeft="@drawable/ico_stars"
                     android:textStyle="bold"
                     android:textSize="19sp"
-                    android:textColor="@color/amarillo"
-                    android:id="@+id/estrellas"
+                    android:textColor="@color/yellow"
+                    android:id="@+id/stars"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -92,8 +92,8 @@
         <TextView
             android:textStyle="bold"
             android:textSize="15sp"
-            android:textColor="@color/azul"
-            android:id="@+id/nombreUsuario"
+            android:textColor="@color/blue"
+            android:id="@+id/nameUser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Nombre" />
@@ -101,17 +101,17 @@
         <TextView
             android:textStyle="bold"
             android:textSize="15sp"
-            android:textColor="@color/lavanda"
-            android:id="@+id/sobrenombreUsuario"
+            android:textColor="@color/lavender"
+            android:id="@+id/loginUser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sobrenombre" />
+             />
     </LinearLayout>
     </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/lavanda"
+        android:background="@color/lavender"
         android:layout_marginTop="10dp"
         />
 
