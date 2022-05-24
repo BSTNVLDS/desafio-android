@@ -49,9 +49,12 @@ class RequestPullList : AppCompatActivity() {
             runOnUiThread {
                 if (call.isSuccessful) {
                     val pullreq = call.body() ?: emptyList()
-                    adapter.addList(pullreq.map { Pull(it.title, it.body, it.user) })
+                    adapter.addList(pullreq.map { Pull(it.title,it.body,it.state,it.user) })
                     val abiertos =adapter.lista.size
+                    val cerrados =adapter.todo.size
                     binding.abiertos.text= "$abiertos Abiertos"
+                    binding.cerrados.text= "$cerrados Cerrados"
+
                 } else {
                     Toast.makeText(applicationContext,"sin conexion" , Toast.LENGTH_SHORT)
                         .show()
