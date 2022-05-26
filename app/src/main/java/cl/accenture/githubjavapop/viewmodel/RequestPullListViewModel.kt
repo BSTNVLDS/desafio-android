@@ -5,7 +5,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import cl.accenture.githubjavapop.adapter.PullAdapter
-import cl.accenture.githubjavapop.conexion.APIService
+import cl.accenture.githubjavapop.connection.GithubAPIService
 import cl.accenture.githubjavapop.controller.Conexion
 import cl.accenture.githubjavapop.databinding.ActivityRequestpulllistBinding
 import cl.accenture.githubjavapop.model.Pull
@@ -29,14 +29,14 @@ class RequestPullListViewModel : ViewModel() {
             var page =1
             while (state){
                 val call = Conexion.getRetrofit("https://api.github.com/repos/")
-                    .create(APIService::class.java).getPullByRepo("$fullname/pulls?per_page=100&state=all&page=$page")
+                    .create(GithubAPIService::class.java).getPullByRepo("$fullname/pulls?per_page=100&state=all&page=$page")
                 CoroutineScope(Dispatchers.Main).launch {
                     if (call.isSuccessful) {
                         val pullreq = call.body() ?: emptyList()
                         for (repo in pullreq){
                             CoroutineScope(Dispatchers.IO).launch {
                                 val call2 = Conexion.getRetrofit("https://api.github.com/users/")
-                                    .create(APIService::class.java).getNameByUser(repo.user?.login.toString())
+                                    .create(GithubAPIService::class.java).getNameByUser(repo.user?.login.toString())
                                 CoroutineScope(Dispatchers.Main).launch{
                                     val fullname = call2.body()?.name.toString()
                                     repo.user?.name = fullname

@@ -1,4 +1,4 @@
-package cl.accenture.githubjavapop.conexion
+package cl.accenture.githubjavapop.connection
 
 import cl.accenture.githubjavapop.model.Repo
 import com.google.gson.annotations.SerializedName

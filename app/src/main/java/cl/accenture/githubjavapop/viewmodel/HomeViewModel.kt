@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cl.accenture.githubjavapop.adapter.RepoAdapter
-import cl.accenture.githubjavapop.conexion.APIService
+import cl.accenture.githubjavapop.connection.GithubAPIService
 import cl.accenture.githubjavapop.controller.Conexion
 import cl.accenture.githubjavapop.view.RequestPullList
 import kotlinx.coroutines.CoroutineScope
@@ -48,14 +48,14 @@ class HomeViewModel:ViewModel() {
         Log.e("","mesafeee")
         CoroutineScope(Dispatchers.IO).launch {
             val call = Conexion.getRetrofit("https://api.github.com/search/")
-                .create(APIService::class.java).getGithubByPage("repositories?q=language:Java&sort=stars&page=$query")
+                .create(GithubAPIService::class.java).getGithubByPage("repositories?q=language:Java&sort=stars&page=$query")
             CoroutineScope(Dispatchers.Main).launch{
                 if(call.isSuccessful){
                     val tempList =call.body()?.repo ?: emptyList()
                     for (repo in tempList){
                         CoroutineScope(Dispatchers.IO).launch {
                             val call2 = Conexion.getRetrofit("https://api.github.com/users/")
-                                .create(APIService::class.java).getNameByUser(repo.owner?.login.toString())
+                                .create(GithubAPIService::class.java).getNameByUser(repo.owner?.login.toString())
                             CoroutineScope(Dispatchers.Main).launch{
                                 val fullname = call2.body()?.name.toString()
                                 repo.owner?.name = fullname

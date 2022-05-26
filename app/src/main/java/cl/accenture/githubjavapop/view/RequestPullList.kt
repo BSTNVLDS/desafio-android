@@ -2,23 +2,11 @@ package cl.accenture.githubjavapop.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
-import androidx.recyclerview.widget.LinearLayoutManager
-import cl.accenture.githubjavapop.adapter.PullAdapter
-import cl.accenture.githubjavapop.conexion.APIService
-import cl.accenture.githubjavapop.controller.Conexion
-import cl.accenture.githubjavapop.databinding.ActivityHomeBinding
 import cl.accenture.githubjavapop.databinding.ActivityRequestpulllistBinding
-import cl.accenture.githubjavapop.model.Pull
-import cl.accenture.githubjavapop.viewmodel.HomeViewModel
 import cl.accenture.githubjavapop.viewmodel.RequestPullListViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class RequestPullList : AppCompatActivity() {
     private var _binding: ActivityRequestpulllistBinding? = null

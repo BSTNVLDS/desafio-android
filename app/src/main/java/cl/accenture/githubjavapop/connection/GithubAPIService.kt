@@ -1,10 +1,10 @@
-package cl.accenture.githubjavapop.conexion
+package cl.accenture.githubjavapop.connection
 
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Url
 
-interface APIService {
+interface GithubAPIService {
     @GET
     suspend fun getGithubByPage(@Url url:String): Response<GithubResponse>
     @GET
