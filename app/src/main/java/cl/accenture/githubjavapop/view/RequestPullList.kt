@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import cl.accenture.githubjavapop.adapter.PullAdapter
 import cl.accenture.githubjavapop.conexion.APIService
 import cl.accenture.githubjavapop.controller.Conexion
+import cl.accenture.githubjavapop.databinding.ActivityHomeBinding
 import cl.accenture.githubjavapop.databinding.ActivityRequestpulllistBinding
 import cl.accenture.githubjavapop.model.Pull
 import kotlinx.coroutines.CoroutineScope
@@ -16,29 +17,28 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class RequestPullList : AppCompatActivity() {
-    private lateinit var binding :ActivityRequestpulllistBinding
+    private var _binding: ActivityRequestpulllistBinding? = null
+    private val binding get() = _binding!!
     private val adapter = PullAdapter()
     private var estado = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityRequestpulllistBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        val extra =intent.extras!!
-        val repo = extra.getString("repo")
-        val user = extra.getString("user")
+        _binding = ActivityRequestpulllistBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+        val extra =intent.extras
+        val repo = extra?.getString("repo")
+        val user = extra?.getString("user")
         title = repo
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         initRecycleView()
             loadLista("$user/$repo")
-
-
 
     }
 
     private fun initRecycleView() {
         binding.rcr.layoutManager = LinearLayoutManager(this)
         binding.rcr.adapter = adapter
-
     }
 
     private fun loadLista(fullname: String) {
@@ -50,6 +50,17 @@ class RequestPullList : AppCompatActivity() {
                 runOnUiThread {
                     if (call.isSuccessful) {
                         val pullreq = call.body() ?: emptyList()
+                        for (repo in pullreq){
+                            CoroutineScope(Dispatchers.IO).launch {
+                                val call2 = Conexion.getRetrofit("https://api.github.com/users/")
+                                    .create(APIService::class.java).getNameByUser(repo.user?.login.toString())
+                                CoroutineScope(Dispatchers.Main).launch{
+                                    val fullname = call2.body()?.name.toString()
+                                    repo.user?.name = fullname
+                                }
+
+                            }
+                        }
                         adapter.addList(pullreq.map { Pull(it.title,it.body,it.state,it.user) })
                         val open_count =adapter.open.size
                         val close_count =adapter.close.size
