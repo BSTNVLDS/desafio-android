@@ -31,12 +31,8 @@ class RepoAdapter() :
 
     override fun getItemCount() = list.size
 
-    fun addList(repo :Repo ) {
+    fun addList(repo :List<Repo> ) {
         this.list += repo
         notifyDataSetChanged()
     }
-
-    fun remplazar(pos: Int, nombre:String) {
-      list[pos].owner!!.login =nombre
-   }
 }
