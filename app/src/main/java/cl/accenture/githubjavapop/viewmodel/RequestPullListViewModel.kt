@@ -1,6 +1,7 @@
 package cl.accenture.githubjavapop.viewmodel
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import cl.accenture.githubjavapop.connection.GithubAPIService
@@ -17,14 +18,17 @@ class RequestPullListViewModel : ViewModel() {
     private var _state = true
     private val state get() = this._state
     val pullList = MutableLiveData<List<Pull>>()
+
     fun loadList(fullname: String,context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             while (state){
+                Log.e("page", pageget().toString())
                 val call = getRetrofit("https://api.github.com/repos/")
                     .create(GithubAPIService::class.java).getPullByRepo("$fullname/pulls?per_page=100&state=all&page=${pageget()}")
                 CoroutineScope(Dispatchers.Main).launch {
                     if (call.isSuccessful) {
                         val pullreq = call.body() ?: emptyList()
+                        if(pullreq.isNotEmpty()){
                         for (repo in pullreq){
                             CoroutineScope(Dispatchers.IO).launch {
                                 val call2 = getRetrofit("https://api.github.com/users/")
@@ -35,8 +39,11 @@ class RequestPullListViewModel : ViewModel() {
                                 }
                             }
                         }
-                        pullList.postValue(pullreq.map { Pull(it.title,it.body,it.state,it.user) })
-                        pageinc()
+                            pullList.postValue(pullreq.map { Pull(it.title,it.body,it.state,it.user) })
+                            pageinc()
+
+                        }
+
                     } else {
                         _state=false
                         Toastr(context,"error code:"+call.code().toString())

@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import cl.accenture.githubjavapop.adapter.PullAdapter
+import cl.accenture.githubjavapop.controller.pagerest
 import cl.accenture.githubjavapop.databinding.ActivityRequestpulllistBinding
 import cl.accenture.githubjavapop.viewmodel.RequestPullListViewModel
 
@@ -18,6 +19,7 @@ class RequestPullList : AppCompatActivity() {
     private val adapter = PullAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        pagerest()
         super.onCreate(savedInstanceState)
         _binding = ActivityRequestpulllistBinding.inflate(layoutInflater)
         val view = binding?.root
@@ -47,6 +49,7 @@ class RequestPullList : AppCompatActivity() {
        return when (item.itemId) {
             android.R.id.home ->{
                 finish()
+                viewModel
                 true
             }
             else -> {

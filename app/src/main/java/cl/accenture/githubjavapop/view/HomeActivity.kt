@@ -8,6 +8,7 @@ import androidx.lifecycle.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cl.accenture.githubjavapop.adapter.RepoAdapter
+import cl.accenture.githubjavapop.controller.pagerest
 import cl.accenture.githubjavapop.databinding.ActivityHomeBinding
 import cl.accenture.githubjavapop.viewmodel.HomeViewModel
 
@@ -20,6 +21,7 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        pagerest()
         _binding = ActivityHomeBinding.inflate(layoutInflater)
         val view = binding?.root
         setContentView(view)

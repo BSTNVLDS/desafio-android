@@ -20,6 +20,10 @@ fun Toastr(context: Context, message: String) {
     fun pageinc(){
         _page++
     }
+    fun pagerest(){
+        _page=1
+    }
+
     fun pageget():Int = page
 
 
