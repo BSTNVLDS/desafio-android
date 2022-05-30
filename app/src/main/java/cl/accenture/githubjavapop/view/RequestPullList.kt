@@ -25,15 +25,15 @@ class RequestPullList : AppCompatActivity() {
         val view = binding?.root
         setContentView(view)
         val extra =intent.extras
-        val repo = extra?.getString("repo")
-        val user = extra?.getString("user")
+        val repo = extra?.getString("repo").toString()
+        val user = extra?.getString("user").toString()
         title = repo
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         _viewModel = ViewModelProvider(this).get()
         binding?.rcr?.layoutManager = LinearLayoutManager(this)
         binding?.rcr?.adapter = adapter
 
-        viewModel?.loadList("$user/$repo",this)
+        viewModel?.loadList(user,repo,this)
         viewModel?.pullList?.observe(this){ pullList->
             adapter.addList(pullList)
             val opencount =adapter.open.size

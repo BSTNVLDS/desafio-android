@@ -12,9 +12,10 @@ interface GithubAPIService {
         @Query ("page") page:Int
     ) : Response<GithubResponse>
 
-    @GET("repos/{user}/pulls")
+    @GET("repos/{user}/{repo}/pulls")
     suspend fun getPullByRepo(
         @Path ("user") user:String,
+        @Path ("repo") repo:String,
         @Query ("per_page") perpage:Int,
         @Query ("state") state:String,
         @Query ("page") page:Int

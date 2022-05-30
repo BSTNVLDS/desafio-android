@@ -17,11 +17,11 @@ class RequestPullListViewModel : ViewModel() {
     private val state get() = this._state
     val pullList = MutableLiveData<List<Pull>>()
 
-    fun loadList(fullname: String,context: Context) {
+    fun loadList(user: String,repo :String,context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             while (state){
                 val call = getRetrofit()
-                    .getPullByRepo(fullname,100,"all",pageget())
+                    .getPullByRepo(user,repo,100,"all",pageget())
                 CoroutineScope(Dispatchers.Main).launch {
                     if (call.isSuccessful) {
                         val pullreq = call.body() ?: emptyList()
