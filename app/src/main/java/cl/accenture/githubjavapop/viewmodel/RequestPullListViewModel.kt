@@ -22,16 +22,15 @@ class RequestPullListViewModel : ViewModel() {
     fun loadList(fullname: String,context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             while (state){
-                Log.e("page", pageget().toString())
-                val call = getRetrofit("https://api.github.com/repos/")
-                    .create(GithubAPIService::class.java).getPullByRepo("$fullname/pulls?per_page=100&state=all&page=${pageget()}")
+                val call = getRetrofit().create(GithubAPIService::class.java)
+                    .getPullByRepo(fullname,100,"all",pageget())
                 CoroutineScope(Dispatchers.Main).launch {
                     if (call.isSuccessful) {
                         val pullreq = call.body() ?: emptyList()
                         if(pullreq.isNotEmpty()){
                         for (repo in pullreq){
                             CoroutineScope(Dispatchers.IO).launch {
-                                val call2 = getRetrofit("https://api.github.com/users/")
+                                val call2 = getRetrofit()
                                     .create(GithubAPIService::class.java).getNameByUser(repo.user.login)
                                 CoroutineScope(Dispatchers.Main).launch{
                                     val username = call2.body()?.name.toString()

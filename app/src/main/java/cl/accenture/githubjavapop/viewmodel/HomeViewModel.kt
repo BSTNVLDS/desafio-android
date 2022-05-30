@@ -16,15 +16,15 @@ class HomeViewModel:ViewModel() {
 
     fun pagination(context:Context){
         CoroutineScope(Dispatchers.IO).launch {
-            val call = getRetrofit("https://api.github.com/search/")
-                .create(GithubAPIService::class.java).getGithubByPage("repositories?q=language:Java&sort=stars&page=${pageget()}")
+            val call = getRetrofit().create(GithubAPIService::class.java)
+                .getGithubByPage("language:Java","stars",pageget())
             CoroutineScope(Dispatchers.Main).launch{
                 if(call.isSuccessful){
                     val tempList =call.body()?.repo ?: emptyList()
                     if(tempList.isNotEmpty()){
                         for (repo in tempList){
                             CoroutineScope(Dispatchers.IO).launch {
-                                val call2 = getRetrofit("https://api.github.com/users/")
+                                val call2 = getRetrofit()
                                     .create(GithubAPIService::class.java).getNameByUser(repo.owner.login)
                                 CoroutineScope(Dispatchers.Main).launch{
                                     val username = call2.body()?.name.toString()

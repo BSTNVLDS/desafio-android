@@ -7,8 +7,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 private var _page =1
 private val page get() = _page
 
-fun getRetrofit(url: String): Retrofit {
-    return Retrofit.Builder().baseUrl(url)
+fun getRetrofit(): Retrofit {
+    return Retrofit.Builder().baseUrl("https://api.github.com/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 }

@@ -1,16 +1,30 @@
 package cl.accenture.githubjavapop.connection
 
 import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Url
+import retrofit2.http.*
 
 interface GithubAPIService {
-    @GET
-    suspend fun getGithubByPage(@Url url:String): Response<GithubResponse>
-    @GET
-    suspend fun getPullByRepo(@Url url:String): Response<List<PullResponse>>
-    @GET
-    suspend fun getNameByUser(@Url url:String): Response<UserResponse>
+
+    @GET("search/repositories")
+    suspend fun getGithubByPage (
+        @Query ("q") query:String,
+    @Query ("sort") sort:String,
+        @Query ("page") page:Int
+    ) : Response<GithubResponse>
+
+    @GET("repos/{user}/pulls")
+    suspend fun getPullByRepo(
+        @Path ("user") user:String,
+        @Query ("per_page") perpage:Int,//100
+        @Query ("state") state:String,//all
+        @Query ("page") page:Int
+
+    ): Response<List<PullResponse>>
+
+    @GET("users/{user}")
+    suspend fun getNameByUser(
+        @Path ("user") user:String
+    ): Response<UserResponse>
 
 
 }
