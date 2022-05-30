@@ -8,9 +8,9 @@ import androidx.lifecycle.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cl.accenture.githubjavapop.adapter.RepoAdapter
-import cl.accenture.githubjavapop.controller.pagerest
 import cl.accenture.githubjavapop.databinding.ActivityHomeBinding
 import cl.accenture.githubjavapop.viewmodel.HomeViewModel
+import pagerest
 
 class HomeActivity : AppCompatActivity() {
     private var _viewModel: HomeViewModel? = null

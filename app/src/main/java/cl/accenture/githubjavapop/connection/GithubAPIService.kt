@@ -15,8 +15,8 @@ interface GithubAPIService {
     @GET("repos/{user}/pulls")
     suspend fun getPullByRepo(
         @Path ("user") user:String,
-        @Query ("per_page") perpage:Int,//100
-        @Query ("state") state:String,//all
+        @Query ("per_page") perpage:Int,
+        @Query ("state") state:String,
         @Query ("page") page:Int
 
     ): Response<List<PullResponse>>

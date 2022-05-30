@@ -7,9 +7,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import cl.accenture.githubjavapop.adapter.PullAdapter
-import cl.accenture.githubjavapop.controller.pagerest
 import cl.accenture.githubjavapop.databinding.ActivityRequestpulllistBinding
 import cl.accenture.githubjavapop.viewmodel.RequestPullListViewModel
+import pagerest
 
 class RequestPullList : AppCompatActivity() {
     private var _binding: ActivityRequestpulllistBinding? = null

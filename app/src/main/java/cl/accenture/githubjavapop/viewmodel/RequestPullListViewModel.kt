@@ -1,18 +1,16 @@
 package cl.accenture.githubjavapop.viewmodel
 
+import Toastr
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import cl.accenture.githubjavapop.connection.GithubAPIService
-import cl.accenture.githubjavapop.controller.Toastr
-import cl.accenture.githubjavapop.controller.getRetrofit
-import cl.accenture.githubjavapop.controller.pageget
-import cl.accenture.githubjavapop.controller.pageinc
 import cl.accenture.githubjavapop.model.Pull
+import getRetrofit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import pageget
+import pageinc
 
 class RequestPullListViewModel : ViewModel() {
     private var _state = true
@@ -22,7 +20,7 @@ class RequestPullListViewModel : ViewModel() {
     fun loadList(fullname: String,context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             while (state){
-                val call = getRetrofit().create(GithubAPIService::class.java)
+                val call = getRetrofit()
                     .getPullByRepo(fullname,100,"all",pageget())
                 CoroutineScope(Dispatchers.Main).launch {
                     if (call.isSuccessful) {
@@ -30,8 +28,7 @@ class RequestPullListViewModel : ViewModel() {
                         if(pullreq.isNotEmpty()){
                         for (repo in pullreq){
                             CoroutineScope(Dispatchers.IO).launch {
-                                val call2 = getRetrofit()
-                                    .create(GithubAPIService::class.java).getNameByUser(repo.user.login)
+                                val call2 = getRetrofit().getNameByUser(repo.user.login)
                                 CoroutineScope(Dispatchers.Main).launch{
                                     val username = call2.body()?.name.toString()
                                     repo.user.name = username

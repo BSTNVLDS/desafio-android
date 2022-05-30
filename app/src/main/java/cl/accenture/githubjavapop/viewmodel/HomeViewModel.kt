@@ -1,14 +1,16 @@
 package cl.accenture.githubjavapop.viewmodel
 
+import Toastr
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import cl.accenture.githubjavapop.connection.GithubAPIService
-import cl.accenture.githubjavapop.controller.*
 import cl.accenture.githubjavapop.model.Repo
+import getRetrofit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import pageget
+import pageinc
 
 class HomeViewModel:ViewModel() {
 
@@ -16,7 +18,7 @@ class HomeViewModel:ViewModel() {
 
     fun pagination(context:Context){
         CoroutineScope(Dispatchers.IO).launch {
-            val call = getRetrofit().create(GithubAPIService::class.java)
+            val call = getRetrofit()
                 .getGithubByPage("language:Java","stars",pageget())
             CoroutineScope(Dispatchers.Main).launch{
                 if(call.isSuccessful){
@@ -24,8 +26,7 @@ class HomeViewModel:ViewModel() {
                     if(tempList.isNotEmpty()){
                         for (repo in tempList){
                             CoroutineScope(Dispatchers.IO).launch {
-                                val call2 = getRetrofit()
-                                    .create(GithubAPIService::class.java).getNameByUser(repo.owner.login)
+                                val call2 = getRetrofit().getNameByUser(repo.owner.login)
                                 CoroutineScope(Dispatchers.Main).launch{
                                     val username = call2.body()?.name.toString()
                                     repo.owner.name = username
