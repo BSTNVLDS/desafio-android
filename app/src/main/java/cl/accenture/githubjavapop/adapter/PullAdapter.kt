@@ -5,11 +5,12 @@ import android.view.ViewGroup
 import android.view.LayoutInflater
 import cl.accenture.githubjavapop.R
 import cl.accenture.githubjavapop.model.Pull
+import cl.accenture.githubjavapop.model.Repo
 
-class PullAdapter() :RecyclerView.Adapter<PullHolder>(){
-    var list :List<Pull> = emptyList()
-    var close :List<Pull> = emptyList()
-    var open :List<Pull> = emptyList()
+class PullAdapter :RecyclerView.Adapter<PullHolder>(){
+    var list  = mutableListOf<Pull>()
+    var close = mutableListOf<Pull>()
+    var open =  mutableListOf<Pull>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         PullHolder(LayoutInflater.from(parent.context)
             .inflate(R.layout.item_pull,parent,false))
@@ -24,7 +25,7 @@ class PullAdapter() :RecyclerView.Adapter<PullHolder>(){
             if(pull.state == "open") open += pull
             else close+=pull
         }
-        list = open+list
+        list = (open+list).toMutableList() //???' ver que onda xd
         list +=close
 
         notifyDataSetChanged()

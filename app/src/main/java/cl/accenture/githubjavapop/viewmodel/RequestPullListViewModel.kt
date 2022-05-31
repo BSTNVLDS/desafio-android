@@ -1,7 +1,5 @@
 package cl.accenture.githubjavapop.viewmodel
 
-import Toastr
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import cl.accenture.githubjavapop.model.Pull
@@ -9,19 +7,17 @@ import getRetrofit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import pageget
-import pageinc
 
 class RequestPullListViewModel : ViewModel() {
-    private var _state = true
-    private val state get() = this._state
+    private var state = true
+    private var page =1
     val pullList = MutableLiveData<List<Pull>>()
 
-    fun loadList(user: String,repo :String,context: Context) {
+    fun loadList(user: String,repo :String) {
         CoroutineScope(Dispatchers.IO).launch {
             while (state){
                 val call = getRetrofit()
-                    .getPullByRepo(user,repo,100,"all",pageget())
+                    .getPullByRepo(user,repo,100,"all",page)
                 CoroutineScope(Dispatchers.Main).launch {
                     if (call.isSuccessful) {
                         val pullreq = call.body() ?: emptyList()
@@ -36,13 +32,12 @@ class RequestPullListViewModel : ViewModel() {
                             }
                         }
                             pullList.postValue(pullreq.map { Pull(it.title,it.body,it.state,it.user) })
-                            pageinc()
 
                         }
 
                     } else {
-                        _state=false
-                        Toastr(context,"error code:"+call.code().toString())
+                        state=false
+                       //todo
                     }
                 }
 
