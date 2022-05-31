@@ -13,43 +13,42 @@ import cl.accenture.githubjavapop.viewmodel.HomeViewModel
 import pagerest
 
 class HomeActivity : AppCompatActivity() {
-    private var _viewModel: HomeViewModel? = null
-    private val viewModel get() = this._viewModel
-    private var _binding: ActivityHomeBinding? = null
-    private val binding get() = this._binding
     private val adapter = RepoAdapter()
+    private val viewModel by lazy { ViewModelProvider(this).get<HomeViewModel>() }
+    private val binding by lazy { ActivityHomeBinding.inflate(layoutInflater) }
+    private var page =1
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        pagerest()
-        _binding = ActivityHomeBinding.inflate(layoutInflater)
-        val view = binding?.root
+        val view = binding.root
         setContentView(view)
-        binding?.rc?.layoutManager = LinearLayoutManager(this)
-        binding?.rc?.adapter = adapter
-        _viewModel = ViewModelProvider(this).get()
-        viewModel?.repoList?.observe(this) { repolist ->
+        binding.rc.layoutManager = LinearLayoutManager(this)
+        binding.rc.adapter = adapter
+        viewModel.repoList.observe(this) { repolist ->
             adapter.addList(repolist)
         }
-        load()
+        loadRepoList()
+
     }
 
-    private fun load() {
-        viewModel?.pagination(this)
+    private fun loadRepoList() {
+        viewModel.loadListByPage(page)
         adapter.setOnclickListener {
-            val positionTap = binding?.rc?.getChildAdapterPosition(it)
-            val selectTap = adapter.list[positionTap ?: 0]
+            val positionTap = binding.rc.getChildAdapterPosition(it)
+            val selectTap = adapter.list[positionTap]
             val intentPRL = Intent(this, RequestPullList::class.java)
             intentPRL.putExtra("repo", selectTap.name)
             intentPRL.putExtra("user", selectTap.owner.login)
             startActivity(intentPRL)
 
         }
-        binding?.rc?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        binding.rc.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (!recyclerView.canScrollVertically(1)) {
-                    viewModel?.pagination(applicationContext)
+                    page++
+                    viewModel.loadListByPage(page)
                 }
             }
 

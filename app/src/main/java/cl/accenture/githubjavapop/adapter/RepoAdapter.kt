@@ -7,10 +7,10 @@ import android.view.View
 import cl.accenture.githubjavapop.R
 import cl.accenture.githubjavapop.model.Repo
 
-class RepoAdapter() :
+class RepoAdapter :
     RecyclerView.Adapter<RepoHolder>(), View.OnClickListener {
     private var listener: View.OnClickListener? = null
-    var list :List<Repo> = emptyList()
+    val list = mutableListOf<Repo>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepoHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_repo,parent,false)
@@ -26,7 +26,7 @@ class RepoAdapter() :
     }
 
     override fun onClick(view: View) {
-        if (listener != null) listener!!.onClick(view)
+        listener?.onClick(view)
     }
 
     override fun getItemCount() = list.size

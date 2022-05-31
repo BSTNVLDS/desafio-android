@@ -14,12 +14,13 @@ import pageinc
 
 class HomeViewModel:ViewModel() {
 
+
      val repoList = MutableLiveData<List<Repo>>()
 
-    fun pagination(context:Context){
+    fun loadListByPage(page:Int){
         CoroutineScope(Dispatchers.IO).launch {
             val call = getRetrofit()
-                .getGithubByPage("language:Java","stars",pageget())
+                .getGithubByPage("language:Java","stars",page)
             CoroutineScope(Dispatchers.Main).launch{
                 if(call.isSuccessful){
                     val tempList =call.body()?.repo ?: emptyList()
@@ -37,7 +38,7 @@ class HomeViewModel:ViewModel() {
                        pageinc()
                     }
                 }else{
-                    Toastr(context,"error code: "+call.code().toString())
+                    //todo
                 }
             }
 
