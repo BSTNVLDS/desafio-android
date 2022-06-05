@@ -14,10 +14,11 @@ val viewModelModule = module {
             .addConverterFactory(GsonConverterFactory.create())
             .build().create(GithubAPIService::class.java)
     }
+
     viewModel {
-        HomeViewModel()
+        HomeViewModel(get())
     }
     viewModel {
-        RequestPullListViewModel()
+        RequestPullListViewModel(get())
     }
 }
