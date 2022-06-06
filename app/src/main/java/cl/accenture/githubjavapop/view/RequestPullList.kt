@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import cl.accenture.githubjavapop.R
 import cl.accenture.githubjavapop.adapter.PullAdapter
 import cl.accenture.githubjavapop.databinding.ActivityRequestpulllistBinding
+import cl.accenture.githubjavapop.model.ApiState
 import cl.accenture.githubjavapop.model.Pull
 import cl.accenture.githubjavapop.viewmodel.RequestPullListViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -33,7 +34,7 @@ class RequestPullList : AppCompatActivity() {
         binding.rcr.layoutManager = LinearLayoutManager(this)
         binding.rcr.adapter = adapter
         if (isNetworkAvailable()) {
-            pullViewModel.pullList.observe(this,::pullListObserver)
+            pullViewModel.statePullList.observe(this,::pullListObserver)
 
         }else{
             binding.progressbar.visibility= View.INVISIBLE
@@ -42,21 +43,28 @@ class RequestPullList : AppCompatActivity() {
         }
         pullViewModel.loadList(user,repo)
     }
-    private fun pullListObserver(pullList :List<Pull>){
-        if (pullList.isNotEmpty()) {
-            adapter.addList(pullList)
-            val opencount = adapter.open.size
-            val closecount = adapter.close.size
-            val openstext = "$opencount Opens"
-            val closedtext = "$closecount Closed"
-            binding.opens.text = openstext
-            binding.closed.text = closedtext
-            binding.progressbar.visibility = View.INVISIBLE
-        } else {
-            binding.progressbar.visibility= View.INVISIBLE
-            binding.viewFliper.showNext()
-            binding.txtConnection.setText(R.string.connectServerMessage)
+
+    private fun pullListObserver(statePullList: ApiState<List<Pull>>){
+        when(statePullList){
+            is ApiState.Error -> {
+                statePullList.error
+                messageViewFlipper(R.string.connectServerMessage)
+            }
+            is ApiState.Loading -> {
+                binding.progressbar.visibility= View.VISIBLE
+            }
+            is ApiState.Success -> {
+                adapter.addList(statePullList.value)
+                val openCount = adapter.open.size
+                val closeCount = adapter.close.size
+                val opensText = "$openCount Opens"
+                val closedText = "$closeCount Closed"
+                binding.opens.text = opensText
+                binding.closed.text = closedText
+                binding.progressbar.visibility = View.INVISIBLE
+            }
         }
+
     }
     private fun isNetworkAvailable():Boolean {
         val cm = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -75,5 +83,10 @@ class RequestPullList : AppCompatActivity() {
             }
         }
 
+    }
+    private fun messageViewFlipper(message :Int){
+        binding.progressbar.visibility= View.INVISIBLE
+        binding.viewFliper.showNext()
+        binding.txtConnection.setText(message)
     }
 }
