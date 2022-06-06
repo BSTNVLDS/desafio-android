@@ -9,6 +9,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import cl.accenture.githubjavapop.R
 import cl.accenture.githubjavapop.adapter.RepoAdapter
 import cl.accenture.githubjavapop.databinding.ActivityHomeBinding
 import cl.accenture.githubjavapop.viewmodel.HomeViewModel
@@ -28,8 +29,7 @@ class HomeActivity : AppCompatActivity() {
         setContentView(view)
         binding.rc.layoutManager = LinearLayoutManager(this)
         binding.rc.adapter = adapter
-        val connectServerMessage =" Could not connect to the server, please try again later"
-        val noInternetMessage =" Ups!! Please turn on mobile data or WiFi"
+
         if (isNetworkAvailable()){
             homeViewModel.repoList.observe(this) { repoList ->
                 if(!repoList.isNullOrEmpty()){
@@ -38,7 +38,7 @@ class HomeActivity : AppCompatActivity() {
                 }else{
                     binding.progressBar.visibility= View.INVISIBLE
                     binding.viewFliper.showNext()
-                    binding.txtConnection.text=connectServerMessage
+                    binding.txtConnection.setText(R.string.connectServerMessage)
                 }
 
             }
@@ -46,7 +46,7 @@ class HomeActivity : AppCompatActivity() {
         }else{
             binding.progressBar.visibility= View.INVISIBLE
             binding.viewFliper.showNext()
-            binding.txtConnection.text=noInternetMessage
+            binding.txtConnection.setText(R.string.noInternetMessage)
         }
     }
 

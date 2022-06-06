@@ -9,16 +9,16 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class RequestPullListViewModel(api : GithubAPIService) : ViewModel() {
+class RequestPullListViewModel( val githubAPIService : GithubAPIService) : ViewModel() {
     private var state = true
     private var page =1
     val pullList = MutableLiveData<List<Pull>>()
-    val api = api
+
 
     fun loadList(user: String,repo :String) {
         CoroutineScope(Dispatchers.IO).launch {
             while (state){
-                val call = api.getPullByRepo(user,repo,100,"all",page)
+                val call = githubAPIService.getPullByRepo(user,repo,100,"all",page)
                 CoroutineScope(Dispatchers.Main).launch {
                     if (call.isSuccessful) {
                         val pullreq = call.body() ?: emptyList()

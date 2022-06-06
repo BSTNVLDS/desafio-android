@@ -9,12 +9,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class HomeViewModel(api : GithubAPIService):ViewModel() {
+class HomeViewModel(val githubAPIService: GithubAPIService):ViewModel() {
      val repoList = MutableLiveData<List<Repo>>()
-    val api = api
+
     fun loadListByPage(page:Int){
         CoroutineScope(Dispatchers.IO).launch {
-            val call = api.getGithubByPage("language:Java","stars",page)
+            val call = githubAPIService.getGithubByPage("language:Java","stars",page)
             CoroutineScope(Dispatchers.Main).launch{
                 if(call.isSuccessful){
                     val tempList =call.body()?.repo ?: emptyList()

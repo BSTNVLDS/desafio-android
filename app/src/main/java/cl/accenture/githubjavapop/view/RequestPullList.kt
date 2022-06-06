@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.view.size
 import androidx.recyclerview.widget.LinearLayoutManager
+import cl.accenture.githubjavapop.R
 import cl.accenture.githubjavapop.adapter.PullAdapter
 import cl.accenture.githubjavapop.databinding.ActivityRequestpulllistBinding
 import cl.accenture.githubjavapop.viewmodel.RequestPullListViewModel
@@ -33,8 +34,7 @@ class RequestPullList : AppCompatActivity() {
         binding.rcr.layoutManager = LinearLayoutManager(this)
         binding.rcr.adapter = adapter
         pullViewModel.loadList(user,repo)
-        val connectServerMessage =" Could not connect to the server, please try again later"
-        val noInternetMessage =" Ups!! Please turn on mobile data or WiFi"
+
         if (isNetworkAvailable()) {
             pullViewModel.pullList.observe(this) { pullList ->
                 if (!pullList.isNullOrEmpty()) {
@@ -49,13 +49,13 @@ class RequestPullList : AppCompatActivity() {
                 } else {
                     binding.progressbar.visibility= View.INVISIBLE
                     binding.viewFliper.showNext()
-                    binding.txtConnection.text=connectServerMessage
+                    binding.txtConnection.setText(R.string.connectServerMessage)
                 }
             }
         }else{
             binding.progressbar.visibility= View.INVISIBLE
             binding.viewFliper.showNext()
-            binding.txtConnection.text=noInternetMessage
+            binding.txtConnection.setText(R.string.noInternetMessage)
         }
     }
     private fun isNetworkAvailable():Boolean {
