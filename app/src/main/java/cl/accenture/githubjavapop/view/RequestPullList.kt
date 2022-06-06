@@ -7,8 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
-import androidx.core.view.size
 import androidx.recyclerview.widget.LinearLayoutManager
 import cl.accenture.githubjavapop.R
 import cl.accenture.githubjavapop.adapter.PullAdapter

@@ -17,8 +17,6 @@ import cl.accenture.githubjavapop.model.Repo
 import cl.accenture.githubjavapop.viewmodel.HomeViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-
-
 class HomeActivity : AppCompatActivity() {
     private val homeViewModel by viewModel<HomeViewModel>()
     private val binding by lazy { ActivityHomeBinding.inflate(layoutInflater) }
@@ -31,33 +29,26 @@ class HomeActivity : AppCompatActivity() {
         setContentView(view)
         binding.rc.layoutManager = LinearLayoutManager(this)
         binding.rc.adapter = adapter
-
         if (isNetworkAvailable()) {
-            homeViewModel.repoList.observe(this, ::repoListObserver)
-
+            homeViewModel.stateRepoList.observe(this, ::repoListObserver)
             loadRepoList()
         } else {
-            binding.progressBar.visibility = View.INVISIBLE
-            binding.viewFliper.showNext()
-            binding.txtConnection.setText(R.string.noInternetMessage)
+         messageViewFlipper(R.string.noInternetMessage)
         }
     }
-//cambiar nombre
-    private fun repoListObserver(repoList:ApiState<List<Repo>>){
-        when(repoList){
+
+    private fun repoListObserver(stateRepoList:ApiState<List<Repo>>){
+        when(stateRepoList){
             is ApiState.Error -> {
-                repoList.error
-                binding.progressBar.visibility= View.INVISIBLE
-                binding.viewFliper.showNext()
-                binding.txtConnection.setText(R.string.connectServerMessage)
+                stateRepoList.error
+                messageViewFlipper(R.string.connectServerMessage)
             }
             is ApiState.Loading -> {
                 binding.progressBar.visibility= View.VISIBLE
             }
-            is ApiState.Success ->
-            {
+            is ApiState.Success -> {
                 binding.progressBar.visibility= View.INVISIBLE
-                adapter.addList(repoList.value)
+                adapter.addList(stateRepoList.value)
             }
         }
 
@@ -89,6 +80,11 @@ class HomeActivity : AppCompatActivity() {
             }
 
         })
+    }
+    private fun messageViewFlipper(message :Int){
+        binding.progressBar.visibility= View.INVISIBLE
+        binding.viewFliper.showNext()
+        binding.txtConnection.setText(message)
     }
 }
 
