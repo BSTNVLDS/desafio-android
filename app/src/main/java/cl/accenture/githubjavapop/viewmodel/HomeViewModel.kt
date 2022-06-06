@@ -4,39 +4,30 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import cl.accenture.githubjavapop.connection.GithubAPIService
+import cl.accenture.githubjavapop.model.ApiState
 import cl.accenture.githubjavapop.model.Repo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 class HomeViewModel(val githubAPIService: GithubAPIService):ViewModel() {
-     val repoList = MutableLiveData<List<Repo>>()
+     val repoList = MutableLiveData<ApiState<List<Repo>>>()
 
     fun loadListByPage(page:Int){
         CoroutineScope(Dispatchers.IO).launch {
-            val call = githubAPIService.getGithubByPage("language:Java","stars",page)
-            CoroutineScope(Dispatchers.Main).launch{
-                if(call.isSuccessful){
-                    val tempList =call.body()?.repo ?: emptyList()
-                    if(tempList.isNotEmpty()){
-                        //quitado temporalmente
-                        /* for (repo in tempList){
-                             CoroutineScope(Dispatchers.IO).launch {
-                                 val call2 = api.getNameByUser(repo.owner.login)
-                                 if (call2.isSuccessful){
-                                     CoroutineScope(Dispatchers.Main).launch{
-                                         val username = call2.body()?.name.toString()
-                                         repo.owner.name = username
-                                     }
-                                 }
-                             }
-                         }*/
-                        //me agota la cantidad de solicitudes:(
-                        repoList.postValue(tempList)
-                    }
+            repoList.postValue(ApiState.Loading())
+            runCatching {
+                githubAPIService.getGithubByPage("language:Java","stars",page)
+            }.onSuccess {response->
+                if(response.isSuccessful){
+                    val tempList =response.body()?.repo ?: emptyList()
+                    repoList.postValue(ApiState.Success(tempList))
                 }else{
-                   repoList.postValue(null)
+                    repoList.postValue(ApiState.Error(HttpException(response)))
                 }
+            }.onFailure { throwable->
+                repoList.postValue(ApiState.Error(throwable))
             }
 
         }

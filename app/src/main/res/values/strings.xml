@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Github JavaPop</string>
-    <string name="connectServerMessage">Could not connect to the server, please try again later</string>
+    <string name="connectServerMessage">empty</string>
     <string name="noInternetMessage">Ups!! Please turn on mobile data or WiFi</string>
 </resources>

@@ -11,7 +11,7 @@ class GithubJavaPop : Application() {
 
         startKoin {
             androidContext(this@GithubJavaPop)
-            modules(viewModelModule)
+            modules(appModule)
 
         }
     }

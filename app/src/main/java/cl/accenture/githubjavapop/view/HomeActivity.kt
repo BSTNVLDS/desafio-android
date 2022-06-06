@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import cl.accenture.githubjavapop.R
 import cl.accenture.githubjavapop.adapter.RepoAdapter
 import cl.accenture.githubjavapop.databinding.ActivityHomeBinding
+import cl.accenture.githubjavapop.model.ApiState
+import cl.accenture.githubjavapop.model.Repo
 import cl.accenture.githubjavapop.viewmodel.HomeViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -21,7 +23,7 @@ class HomeActivity : AppCompatActivity() {
     private val homeViewModel by viewModel<HomeViewModel>()
     private val binding by lazy { ActivityHomeBinding.inflate(layoutInflater) }
     private val adapter = RepoAdapter()
-    private var page =1
+    private var page = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,24 +32,35 @@ class HomeActivity : AppCompatActivity() {
         binding.rc.layoutManager = LinearLayoutManager(this)
         binding.rc.adapter = adapter
 
-        if (isNetworkAvailable()){
-            homeViewModel.repoList.observe(this) { repoList ->
-                if(!repoList.isNullOrEmpty()){
-                    adapter.addList(repoList)
-                    binding.progressBar.visibility= View.INVISIBLE
-                }else{
-                    binding.progressBar.visibility= View.INVISIBLE
-                    binding.viewFliper.showNext()
-                    binding.txtConnection.setText(R.string.connectServerMessage)
-                }
+        if (isNetworkAvailable()) {
+            homeViewModel.repoList.observe(this, ::repoListObserver)
 
-            }
             loadRepoList()
-        }else{
-            binding.progressBar.visibility= View.INVISIBLE
+        } else {
+            binding.progressBar.visibility = View.INVISIBLE
             binding.viewFliper.showNext()
             binding.txtConnection.setText(R.string.noInternetMessage)
         }
+    }
+//cambiar nombre
+    private fun repoListObserver(repoList:ApiState<List<Repo>>){
+        when(repoList){
+            is ApiState.Error -> {
+                repoList.error
+                binding.progressBar.visibility= View.INVISIBLE
+                binding.viewFliper.showNext()
+                binding.txtConnection.setText(R.string.connectServerMessage)
+            }
+            is ApiState.Loading -> {
+                binding.progressBar.visibility= View.VISIBLE
+            }
+            is ApiState.Success ->
+            {
+                binding.progressBar.visibility= View.INVISIBLE
+                adapter.addList(repoList.value)
+            }
+        }
+
     }
 
     private fun isNetworkAvailable():Boolean {

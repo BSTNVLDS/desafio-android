@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import cl.accenture.githubjavapop.R
 import cl.accenture.githubjavapop.adapter.PullAdapter
 import cl.accenture.githubjavapop.databinding.ActivityRequestpulllistBinding
+import cl.accenture.githubjavapop.model.Pull
 import cl.accenture.githubjavapop.viewmodel.RequestPullListViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -33,29 +34,30 @@ class RequestPullList : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.rcr.layoutManager = LinearLayoutManager(this)
         binding.rcr.adapter = adapter
-        pullViewModel.loadList(user,repo)
-
         if (isNetworkAvailable()) {
-            pullViewModel.pullList.observe(this) { pullList ->
-                if (!pullList.isNullOrEmpty()) {
-                    adapter.addList(pullList)
-                    val opencount = adapter.open.size
-                    val closecount = adapter.close.size
-                    val openstext = "$opencount Opens"
-                    val closedtext = "$closecount Closed"
-                    binding.opens.text = openstext
-                    binding.closed.text = closedtext
-                    binding.progressbar.visibility = View.INVISIBLE
-                } else {
-                    binding.progressbar.visibility= View.INVISIBLE
-                    binding.viewFliper.showNext()
-                    binding.txtConnection.setText(R.string.connectServerMessage)
-                }
-            }
+            pullViewModel.pullList.observe(this,::pullListObserver)
+
         }else{
             binding.progressbar.visibility= View.INVISIBLE
             binding.viewFliper.showNext()
             binding.txtConnection.setText(R.string.noInternetMessage)
+        }
+        pullViewModel.loadList(user,repo)
+    }
+    private fun pullListObserver(pullList :List<Pull>){
+        if (pullList.isNotEmpty()) {
+            adapter.addList(pullList)
+            val opencount = adapter.open.size
+            val closecount = adapter.close.size
+            val openstext = "$opencount Opens"
+            val closedtext = "$closecount Closed"
+            binding.opens.text = openstext
+            binding.closed.text = closedtext
+            binding.progressbar.visibility = View.INVISIBLE
+        } else {
+            binding.progressbar.visibility= View.INVISIBLE
+            binding.viewFliper.showNext()
+            binding.txtConnection.setText(R.string.connectServerMessage)
         }
     }
     private fun isNetworkAvailable():Boolean {

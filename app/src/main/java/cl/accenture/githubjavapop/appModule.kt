@@ -8,7 +8,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-val viewModelModule = module {
+val appModule = module {
     single{
         Retrofit.Builder().baseUrl("https://api.github.com/")
             .addConverterFactory(GsonConverterFactory.create())
