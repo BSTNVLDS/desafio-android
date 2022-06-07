@@ -13,13 +13,12 @@ class RepoAdapter :
     val list = mutableListOf<Repo>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepoHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_repo,parent,false)
+            .inflate(R.layout.item_repo, parent, false)
         view.setOnClickListener(this)
         return RepoHolder(view)
     }
 
-    override fun onBindViewHolder(holder: RepoHolder, position: Int)
-    = holder.bind(list[position])
+    override fun onBindViewHolder(holder: RepoHolder, position: Int) = holder.bind(list[position])
 
     fun setOnclickListener(listener: View.OnClickListener?) {
         this.listener = listener
@@ -31,7 +30,7 @@ class RepoAdapter :
 
     override fun getItemCount() = list.size
 
-    fun addList(repo :List<Repo> ) {
+    fun addList(repo: List<Repo>) {
         this.list += repo
         notifyDataSetChanged()
     }

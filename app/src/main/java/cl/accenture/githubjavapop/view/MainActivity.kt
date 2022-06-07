@@ -1,8 +1,11 @@
 package cl.accenture.githubjavapop.view
 
 import android.os.Bundle
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
+import cl.accenture.githubjavapop.R
 import cl.accenture.githubjavapop.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -12,22 +15,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val view = binding.root
         setContentView(view)
-      //cambiar cuando este en el pull
-    // supportActionBar?.setDisplayHomeAsUpEnabled(true)
-       // title = repo
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        NavigationUI.setupActionBarWithNavController(this, navHostFragment.navController)
+
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                // finish()algo
-                true
-            }
-            else -> {
-                super.onOptionsItemSelected(item)
-            }
-        }
-
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = this.findNavController(R.id.nav_host_fragment)
+        return navController.navigateUp()
     }
 }
 
