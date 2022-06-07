@@ -17,8 +17,11 @@
     <fragment
         android:id="@+id/pullRequestsFragment"
         android:name="cl.accenture.githubjavapop.view.PullRequestsFragment"
-        android:label="Pull"
+        android:label="{repo}"
         tools:layout="@layout/fragment_pull_requests">
+        <argument
+            android:name="repo"
+            app:argType="string" />
         <action
             android:id="@+id/action_pullRequestsFragment_to_homeFragment"
             app:destination="@id/homeFragment" />

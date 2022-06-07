@@ -81,7 +81,7 @@ class HomeFragment : Fragment() {
             bundle.putString("repo", selectRepo.name)
             bundle.putString("user", selectRepo.owner.login)
             binding.root.findNavController()
-                .navigate(R.id.action_homeFragment_to_pullRequestsFragment, bundle)
+                .navigate(R.id.action_homeFragment_to_pullRequestsFragment,bundle)
 
         }
         binding.rc.addOnScrollListener(object : RecyclerView.OnScrollListener() {
