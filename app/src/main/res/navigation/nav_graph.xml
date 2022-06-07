@@ -10,5 +10,14 @@
         android:name="cl.accenture.githubjavapop.view.HomeFragment"
         android:label="HomeFragment"
         tools:layout="@layout/fragment_home"
-        />
+        >
+        <action
+            android:id="@+id/action_homeFragment_to_pullRequestsFragment"
+            app:destination="@id/pullRequestsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/pullRequestsFragment"
+        android:name="cl.accenture.githubjavapop.view.PullRequestsFragment"
+        android:label="PullRequestsFragment"
+        tools:layout="@layout/fragment_pull_requests"/>
 </navigation>
