@@ -5,6 +5,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -47,8 +48,8 @@ class RequestPullList : AppCompatActivity() {
     private fun pullListObserver(statePullList: ApiState<List<Pull>>){
         when(statePullList){
             is ApiState.Error -> {
-                statePullList.error
-                messageViewFlipper(R.string.connectServerMessage)
+                //si es 403 supero e limite, si es 200 es que esta vacio
+                    messageViewFlipper(R.string.connectServerMessage)
             }
             is ApiState.Loading -> {
                 binding.progressbar.visibility= View.VISIBLE
