@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -61,23 +62,29 @@ class PullRequestsFragment : Fragment() {
     private fun pullListObserver(statePullList: ApiState<List<Pull>>) {
         when (statePullList) {
             is ApiState.Error -> {
-                //si es 403 supero e limite,
-              //  Log.e("error", "a" + statePullList.error.message.toString())
-                binding.txtConnection.setText(R.string.connectServerMessage)
+                if(statePullList.error.message.toString().equals("HTTP 403 ")){
+                    binding.txtConnection.setText(R.string.exceededLimit)
+                }else if(statePullList.error.message.toString().equals("HTTP 422 ")){
+                    binding.txtConnection.setText(R.string.parametersNoCompleted)
+                }
                 setViewState(CONTENT_STATE_ERROR)
             }
             is ApiState.Loading -> setViewState(CONTENT_STATE_LOADING)
 
             is ApiState.Success -> {
-                // si es 200 es que esta vacio
-                adapter.addList(statePullList.value)
-                val openCount = adapter.open.size
-                val closeCount = adapter.close.size
-                val opensText = "$openCount Opens"
-                val closedText = "$closeCount Closed"
-                binding.opens.text = opensText
-                binding.closed.text = closedText
-                setViewState(CONTENT_STATE_CONTENT)
+                if(statePullList.value.isEmpty()){
+                    binding.txtConnection.setText(R.string.connectServerMessage)
+                    setViewState(CONTENT_STATE_ERROR)
+                }else{
+                    adapter.addList(statePullList.value)
+                    val openCount = adapter.open.size
+                    val closeCount = adapter.close.size
+                    val opensText = "$openCount Opens"
+                    val closedText = "$closeCount Closed"
+                    binding.opens.text = opensText
+                    binding.closed.text = closedText
+                    setViewState(CONTENT_STATE_CONTENT)
+                }
             }
         }
     }

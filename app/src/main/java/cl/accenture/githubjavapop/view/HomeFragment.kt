@@ -55,16 +55,23 @@ class HomeFragment : Fragment() {
     private fun repoListObserver(stateRepoList: ApiState<List<Repo>>) {
         when (stateRepoList) {
             is ApiState.Error -> {
+                if (stateRepoList.error.message.toString().equals("HTTP 403 ")) {
+                    binding.txtConnection.setText(R.string.exceededLimit)
+                } else if (stateRepoList.error.message.toString().equals("HTTP 422 ")) {
+                    binding.txtConnection.setText(R.string.parametersNoCompleted)
+                }
                 setViewState(CONTENT_STATE_ERROR)
-                Log.e("error", "a" + stateRepoList.error.message.toString())
-                //422 mal solicitado
-                binding.txtConnection.setText(R.string.connectServerMessage)
             }
             is ApiState.Loading -> setViewState(CONTENT_STATE_LOADING)
 
             is ApiState.Success -> {
-                setViewState(CONTENT_STATE_CONTENT)
-                adapter.addList(stateRepoList.value)
+                if (stateRepoList.value.isEmpty()) {
+                    binding.txtConnection.setText(R.string.connectServerMessage)
+                    setViewState(CONTENT_STATE_ERROR)
+                } else {
+                    setViewState(CONTENT_STATE_CONTENT)
+                    adapter.addList(stateRepoList.value)
+                }
             }
         }
 

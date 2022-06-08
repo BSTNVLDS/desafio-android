@@ -1,7 +1,8 @@
 package cl.accenture.githubjavapop.model
 
-class Pull (
+class Pull(
     var title: String = "",
-    var body: String= "",
+    var body: String = "",
     var state: String = "",
-    var user: Owner = Owner())
+    var user: Owner = Owner()
+)
