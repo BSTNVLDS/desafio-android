@@ -8,7 +8,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.findNavController
+import androidx.core.content.res.ResourcesCompat.getDrawable
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import cl.accenture.githubjavapop.R
 import cl.accenture.githubjavapop.adapter.PullAdapter
@@ -17,6 +18,10 @@ import cl.accenture.githubjavapop.model.ApiState
 import cl.accenture.githubjavapop.model.Pull
 import cl.accenture.githubjavapop.viewmodel.RequestPullListViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
+private const val CONTENT_STATE_CONTENT = 0
+private const val CONTENT_STATE_LOADING = 1
+private const val CONTENT_STATE_ERROR = 2
 
 class PullRequestsFragment : Fragment() {
     private val pullViewModel by viewModel<RequestPullListViewModel>()
@@ -27,6 +32,12 @@ class PullRequestsFragment : Fragment() {
         super.onCreate(savedInstanceState)
         val repo = arguments?.getString("repo").toString()
         val user = arguments?.getString("user").toString()
+        binding.toolbarPull.title = repo
+        binding.toolbarPull.navigationIcon =  getDrawable(resources, R.drawable.ico_back,null)
+        binding.toolbarPull.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
+
         binding.rcr.layoutManager = LinearLayoutManager(context)
         binding.rcr.adapter = adapter
         if (isNetworkAvailable()) {
@@ -50,13 +61,15 @@ class PullRequestsFragment : Fragment() {
     private fun pullListObserver(statePullList: ApiState<List<Pull>>) {
         when (statePullList) {
             is ApiState.Error -> {
-                //si es 403 supero e limite, si es 200 es que esta vacio
-                messageViewFlipper(R.string.connectServerMessage)
+                //si es 403 supero e limite,
+              //  Log.e("error", "a" + statePullList.error.message.toString())
+                binding.txtConnection.setText(R.string.connectServerMessage)
+                setViewState(CONTENT_STATE_ERROR)
             }
-            is ApiState.Loading -> {
-                binding.progressbar.visibility = View.VISIBLE
-            }
+            is ApiState.Loading -> setViewState(CONTENT_STATE_LOADING)
+
             is ApiState.Success -> {
+                // si es 200 es que esta vacio
                 adapter.addList(statePullList.value)
                 val openCount = adapter.open.size
                 val closeCount = adapter.close.size
@@ -64,7 +77,7 @@ class PullRequestsFragment : Fragment() {
                 val closedText = "$closeCount Closed"
                 binding.opens.text = opensText
                 binding.closed.text = closedText
-                binding.progressbar.visibility = View.INVISIBLE
+                setViewState(CONTENT_STATE_CONTENT)
             }
         }
     }
@@ -75,11 +88,7 @@ class PullRequestsFragment : Fragment() {
         return activeNetwork?.isConnectedOrConnecting == true
     }
 
-
-    private fun messageViewFlipper(message: Int) {
-        binding.progressbar.visibility = View.INVISIBLE
-        binding.viewFliper.showNext()
-        binding.txtConnection.setText(message)
+    private fun setViewState(state: Int) {
+        binding.viewFliper.displayedChild = state
     }
-
 }

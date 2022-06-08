@@ -24,7 +24,7 @@ class RequestPullListViewModel(private val githubAPIService : GithubAPIService) 
                 }.onSuccess { response ->
                     if (response.isSuccessful) {
                         val tempList = response.body() ?: emptyList()
-                        val parseList = tempList.map { Pull(it.title, it.body , it.state, it.user) }
+                        val parseList = tempList.map { Pull(it.title, it.body, it.state, it.user) }
                         val definitiveList = loadNameByLogin(parseList)
                         statePullList.postValue(ApiState.Success(definitiveList))
                         page++

@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:orientation="vertical"
+<RelativeLayout android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <ProgressBar
-        android:id="@+id/progressbar"
-        android:layout_centerInParent="true"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:indeterminate="true"
-        android:indeterminateTint="@color/yellow"/>
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:layout_width="match_parent"
+        android:id="@+id/toolbarPull"
+        android:background="@color/grey"
+        app:title="@string/app_name"
+        app:titleTextColor="@color/white"
+        android:layout_height="wrap_content" />
+
 
     <LinearLayout
+        android:layout_below="@id/toolbarPull"
         android:id="@+id/barinfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -54,6 +57,17 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+        <ProgressBar
+            android:id="@+id/progressbar"
+           android:layout_centerInParent="true"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/yellow"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
             <TextView
                 android:gravity="center_horizontal"
                 android:layout_margin="30dp"
@@ -62,7 +76,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableTop="@drawable/ico_fail"
-                android:text=" Upps!"
                 android:textColor="@color/yellow"
                 android:textSize="19sp"
                 android:textStyle="bold" />

@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,9 @@ import cl.accenture.githubjavapop.model.Repo
 import cl.accenture.githubjavapop.viewmodel.HomeViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+private const val CONTENT_STATE_CONTENT = 0
+private const val CONTENT_STATE_LOADING = 1
+private const val CONTENT_STATE_ERROR = 2
 
 class HomeFragment : Fragment() {
     private val homeViewModel by viewModel<HomeViewModel>()
@@ -28,14 +32,13 @@ class HomeFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding.rc.layoutManager = LinearLayoutManager(context)
         binding.rc.adapter = adapter
         if (isNetworkAvailable()) {
             homeViewModel.stateRepoList.observe(this, ::repoListObserver)
             loadRepoList()
         } else {
-            messageViewFlipper(R.string.noInternetMessage)
+            binding.txtConnection.setText(R.string.noInternetMessage)
         }
     }
 
@@ -52,14 +55,15 @@ class HomeFragment : Fragment() {
     private fun repoListObserver(stateRepoList: ApiState<List<Repo>>) {
         when (stateRepoList) {
             is ApiState.Error -> {
-                stateRepoList.error
-                messageViewFlipper(R.string.connectServerMessage)
+                setViewState(CONTENT_STATE_ERROR)
+                Log.e("error", "a" + stateRepoList.error.message.toString())
+                //422 mal solicitado
+                binding.txtConnection.setText(R.string.connectServerMessage)
             }
-            is ApiState.Loading -> {
-                binding.progressBar.visibility = View.VISIBLE
-            }
+            is ApiState.Loading -> setViewState(CONTENT_STATE_LOADING)
+
             is ApiState.Success -> {
-                binding.progressBar.visibility = View.INVISIBLE
+                setViewState(CONTENT_STATE_CONTENT)
                 adapter.addList(stateRepoList.value)
             }
         }
@@ -81,7 +85,7 @@ class HomeFragment : Fragment() {
             bundle.putString("repo", selectRepo.name)
             bundle.putString("user", selectRepo.owner.login)
             binding.root.findNavController()
-                .navigate(R.id.action_homeFragment_to_pullRequestsFragment,bundle)
+                .navigate(R.id.action_homeFragment_to_pullRequestsFragment, bundle)
 
         }
         binding.rc.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -96,10 +100,8 @@ class HomeFragment : Fragment() {
         })
     }
 
-    private fun messageViewFlipper(message: Int) {
-        binding.progressBar.visibility = View.INVISIBLE
-        binding.viewFliper.showNext()
-        binding.txtConnection.setText(message)
+    private fun setViewState(state: Int) {
+        binding.viewFliper.displayedChild = state
     }
 }
 
