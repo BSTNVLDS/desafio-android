@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical">
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:layout_width="match_parent"
         android:id="@+id/toolbarPull"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/grey"
         app:title="@string/app_name"
-        app:titleTextColor="@color/white"
-        android:layout_height="wrap_content" />
+        app:titleTextColor="@color/white" />
 
 
     <LinearLayout
-        android:layout_below="@id/toolbarPull"
         android:id="@+id/barinfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/toolbarPull"
         android:background="@color/light_lavender"
         android:orientation="horizontal"
         android:padding="5dp">
@@ -44,41 +44,61 @@
             android:textSize="16sp"
             android:textStyle="bold" />
     </LinearLayout>
+
     <ViewFlipper
-        android:layout_below="@id/barinfo"
         android:id="@+id/viewFliper"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/barinfo">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcr"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"/>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        <ProgressBar
-            android:id="@+id/progressbar"
-           android:layout_centerInParent="true"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:indeterminate="true"
-            android:indeterminateTint="@color/yellow"/>
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <TextView
-                android:gravity="center_horizontal"
-                android:layout_margin="30dp"
+
+            <ProgressBar
+                android:id="@+id/progressbar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_centerInParent="true"
-                android:id="@+id/txtConnection"
+                android:indeterminate="true"
+                android:indeterminateTint="@color/yellow" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ico_fail"
-                android:textColor="@color/yellow"
-                android:textSize="19sp"
-                android:textStyle="bold" />
+                android:layout_centerInParent="true"
+                android:layout_margin="10dp"
+                android:background="@drawable/round_message"
+                android:orientation="horizontal"
+                android:paddingEnd="5dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/ic_app_foreground" />
+
+                <TextView
+                    android:id="@+id/txtConnection"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/blue"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/white"
+                    android:textSize="19sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </RelativeLayout>
 
     </ViewFlipper>
