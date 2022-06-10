@@ -1,10 +1,6 @@
 package cl.accenture.githubjavapop.view
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +12,7 @@ import cl.accenture.githubjavapop.R
 import cl.accenture.githubjavapop.adapter.PullAdapter
 import cl.accenture.githubjavapop.databinding.FragmentPullRequestsBinding
 import cl.accenture.githubjavapop.model.ApiState
+import cl.accenture.githubjavapop.model.GitHubByPageError
 import cl.accenture.githubjavapop.model.Pull
 import cl.accenture.githubjavapop.viewmodel.RequestPullListViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -33,22 +30,19 @@ class PullRequestsFragment : Fragment() {
         super.onCreate(savedInstanceState)
         val repo = arguments?.getString("repo").toString()
         val user = arguments?.getString("user").toString()
-        binding.toolbarPull.title = repo
-        binding.toolbarPull.navigationIcon =  getDrawable(resources, R.drawable.ico_back,null)
+        addNavegation(repo)
+        binding.rcr.layoutManager = LinearLayoutManager(context)
+        binding.rcr.adapter = adapter
+        pullViewModel.statePullList.observe(this, ::pullListObserver)
+        pullViewModel.loadList(user, repo)
+    }
+
+    private fun addNavegation(repoName :String) {
+        binding.toolbarPull.title = repoName
+        binding.toolbarPull.navigationIcon = getDrawable(resources, R.drawable.ico_back, null)
         binding.toolbarPull.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
-
-        binding.rcr.layoutManager = LinearLayoutManager(context)
-        binding.rcr.adapter = adapter
-        if (isNetworkAvailable()) {
-            pullViewModel.statePullList.observe(this, ::pullListObserver)
-        } else {
-            binding.progressbar.visibility = View.INVISIBLE
-            binding.viewFliper.showNext()
-            binding.txtConnection.setText(R.string.noInternetMessage)
-        }
-        pullViewModel.loadList(user, repo)
     }
 
     override fun onCreateView(
@@ -59,23 +53,19 @@ class PullRequestsFragment : Fragment() {
         return binding.root
     }
 
-    private fun pullListObserver(statePullList: ApiState<List<Pull>>) {
+    private fun pullListObserver(statePullList: ApiState<List<Pull>, GitHubByPageError>) {
         when (statePullList) {
             is ApiState.Error -> {
-                if(statePullList.error.message.toString().equals("HTTP 403 ")){
-                    binding.txtConnection.setText(R.string.exceededLimit)
-                }else if(statePullList.error.message.toString().equals("HTTP 422 ")){
-                    binding.txtConnection.setText(R.string.parametersNoCompleted)
-                }
+                repoListErrorHandler(statePullList.error)
                 setViewState(CONTENT_STATE_ERROR)
             }
             is ApiState.Loading -> setViewState(CONTENT_STATE_LOADING)
 
             is ApiState.Success -> {
-                if(statePullList.value.isEmpty()){
+                if (statePullList.value.isEmpty()) {
                     binding.txtConnection.setText(R.string.connectServerMessage)
                     setViewState(CONTENT_STATE_ERROR)
-                }else{
+                } else {
                     adapter.addList(statePullList.value)
                     val openCount = adapter.open.size
                     val closeCount = adapter.close.size
@@ -89,13 +79,21 @@ class PullRequestsFragment : Fragment() {
         }
     }
 
-    private fun isNetworkAvailable(): Boolean {
-        val cm = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
-        return activeNetwork?.isConnectedOrConnecting == true
+    private fun repoListErrorHandler(error: GitHubByPageError) {
+        when (error) {
+            is GitHubByPageError.UnprocessableEntity ->
+                binding.txtConnection.setText(R.string.parametersNoCompleted)
+            is GitHubByPageError.TooManyRequest ->
+                binding.txtConnection.setText(R.string.exceededLimit)
+            is GitHubByPageError.Unknown ->
+                binding.txtConnection.setText(R.string.genericError)
+            is GitHubByPageError.NoConnection ->
+                binding.txtConnection.setText(R.string.noInternetMessage)
+        }
     }
 
     private fun setViewState(state: Int) {
         binding.viewFliper.displayedChild = state
     }
+
 }

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Github JavaPop</string>
     <string name="connectServerMessage">empty! no requests for now</string>
+    <string name="genericError">generic error</string>
     <string name="parametersNoCompleted">The query cannot be completed, check the parameters</string>
     <string name="exceededLimit">oops!! you have exceeded the request limit, please try again later</string>
     <string name="noInternetMessage">oops!! Please turn on mobile data or WiFi</string>
