@@ -2,7 +2,6 @@ package cl.accenture.githubjavapop
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import cl.accenture.githubjavapop.connection.GithubAPIService
 import cl.accenture.githubjavapop.viewmodel.HomeViewModel
 import cl.accenture.githubjavapop.viewmodel.RequestPullListViewModel
@@ -19,11 +18,9 @@ val appModule = module {
             .addConverterFactory(GsonConverterFactory.create())
             .build().create(GithubAPIService::class.java)
     }
-    factory {
-        val conn =Context.CONNECTIVITY_SERVICE
-        val cm = androidContext().getSystemService(conn) as ConnectivityManager
-        val activeNetwork = cm.activeNetworkInfo
-        activeNetwork?.isConnectedOrConnecting == true
+    single {
+        androidContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
     }
 
     viewModel {
@@ -33,3 +30,4 @@ val appModule = module {
         RequestPullListViewModel(get(), get())
     }
 }
+

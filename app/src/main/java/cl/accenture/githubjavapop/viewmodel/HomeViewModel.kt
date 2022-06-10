@@ -1,5 +1,6 @@
 package cl.accenture.githubjavapop.viewmodel
 
+import android.net.ConnectivityManager
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import cl.accenture.githubjavapop.connection.GithubAPIService
@@ -12,11 +13,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
-class HomeViewModel(private val githubAPIService: GithubAPIService,private  val connection :Boolean) : ViewModel() {
+class HomeViewModel(private val githubAPIService: GithubAPIService,
+                    private  val connectivityManager :ConnectivityManager) : ViewModel() {
     val stateRepoList = MutableLiveData<ApiState<List<Repo>, GitHubByPageError>>()
 
     fun loadListByPage(page: Int) {
-        if (connection) {
+        if (stateConnection()) {
             CoroutineScope(Dispatchers.IO).launch {
                 stateRepoList.postValue(ApiState.Loading())
                 runCatching {
@@ -54,5 +56,8 @@ class HomeViewModel(private val githubAPIService: GithubAPIService,private  val 
         }
         return tempList
     }
-
+private fun stateConnection():Boolean{
+    val activeNetwork = connectivityManager.activeNetworkInfo
+   return activeNetwork?.isConnectedOrConnecting ==true
+}
 }
