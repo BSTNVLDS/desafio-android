@@ -7,7 +7,7 @@ import cl.accenture.githubjavapop.connection.GithubAPIService
 import cl.accenture.githubjavapop.model.ApiState
 import cl.accenture.githubjavapop.model.GitHubByPageError
 import cl.accenture.githubjavapop.model.Repo
-import cl.accenture.githubjavapop.toGitHubByPageError
+import cl.accenture.githubjavapop.util.toGitHubByPageError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

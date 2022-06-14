@@ -1,4 +1,4 @@
-package cl.accenture.githubjavapop
+package cl.accenture.githubjavapop.util
 
 import cl.accenture.githubjavapop.model.GitHubByPageError
 import retrofit2.HttpException
@@ -8,7 +8,6 @@ fun Throwable.toGitHubByPageError():GitHubByPageError{
       this is HttpException && code() == 422 -> GitHubByPageError.UnprocessableEntity
         this is HttpException && code() == 403 ->GitHubByPageError.TooManyRequest
        else -> GitHubByPageError.Unknown
-
 
     }
 
