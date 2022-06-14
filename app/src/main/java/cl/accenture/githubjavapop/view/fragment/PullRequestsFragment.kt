@@ -1,4 +1,4 @@
-package cl.accenture.githubjavapop.view
+package cl.accenture.githubjavapop.view.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
