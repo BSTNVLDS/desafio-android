@@ -1,5 +1,11 @@
 package cl.accenture.githubjavapop.util
 
-import org.junit.jupiter.api.Assertions.*
+import org.junit.Before
 
-internal class MappersKtTest
+
+internal class MappersKtTest{
+    @Before
+    fun setUp(){
+
+    }
+}

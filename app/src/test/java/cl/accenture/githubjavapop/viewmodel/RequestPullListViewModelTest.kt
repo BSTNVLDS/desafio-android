@@ -1,5 +1,11 @@
 package cl.accenture.githubjavapop.viewmodel
 
-import org.junit.jupiter.api.Assertions.*
+import org.junit.Before
 
-internal class RequestPullListViewModelTest
+
+internal class RequestPullListViewModelTest{
+    @Before
+    fun setUp(){
+
+    }
+}
