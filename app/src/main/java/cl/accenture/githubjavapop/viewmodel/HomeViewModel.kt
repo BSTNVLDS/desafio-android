@@ -60,4 +60,5 @@ private fun stateConnection():Boolean{
     val activeNetwork = connectivityManager.activeNetworkInfo
    return activeNetwork?.isConnectedOrConnecting ==true
 }
+
 }
