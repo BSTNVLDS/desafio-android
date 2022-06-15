@@ -14,12 +14,10 @@ import cl.accenture.githubjavapop.databinding.FragmentHomeBinding
 import cl.accenture.githubjavapop.model.ApiState
 import cl.accenture.githubjavapop.model.GitHubByPageError
 import cl.accenture.githubjavapop.model.Repo
+import cl.accenture.githubjavapop.util.*
 import cl.accenture.githubjavapop.viewmodel.HomeViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-private const val CONTENT_STATE_CONTENT = 0
-private const val CONTENT_STATE_LOADING = 1
-private const val CONTENT_STATE_ERROR = 2
 
 class HomeFragment : Fragment() {
     private val homeViewModel by viewModel<HomeViewModel>()

@@ -14,12 +14,10 @@ import cl.accenture.githubjavapop.databinding.FragmentPullRequestsBinding
 import cl.accenture.githubjavapop.model.ApiState
 import cl.accenture.githubjavapop.model.GitHubByPageError
 import cl.accenture.githubjavapop.model.Pull
+import cl.accenture.githubjavapop.util.*
 import cl.accenture.githubjavapop.viewmodel.RequestPullListViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-private const val CONTENT_STATE_CONTENT = 0
-private const val CONTENT_STATE_LOADING = 1
-private const val CONTENT_STATE_ERROR = 2
 
 class PullRequestsFragment : Fragment() {
     private val pullViewModel by viewModel<RequestPullListViewModel>()
