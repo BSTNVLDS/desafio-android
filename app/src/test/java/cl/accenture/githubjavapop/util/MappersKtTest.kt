@@ -2,8 +2,6 @@ package cl.accenture.githubjavapop.util
 
 import cl.accenture.githubjavapop.connection.GithubAPIService
 import cl.accenture.githubjavapop.model.GitHubByPageError
-import io.mockk.MockKAnnotations
-import io.mockk.impl.annotations.RelaxedMockK
 import okhttp3.MediaType
 import okhttp3.ResponseBody
 import org.junit.Before
@@ -18,36 +16,34 @@ internal class MappersKtTest {
     private lateinit var genericError: Throwable
     private lateinit var exceptionU: HttpException
     private lateinit var exceptionT: HttpException
-    private lateinit var body: ResponseBody
-    @RelaxedMockK
-    private lateinit var mediaType: MediaType
+
+    private fun `set code to response error`(int: Int): Response<GithubAPIService> {
+        val body = ResponseBody.create(
+            MediaType.parse("application/json; charset=utf-8"), "test error"
+        )
+        return Response.error(int, body)
+    }
 
     @Before
     fun setUp() {
-        MockKAnnotations.init(this)
         genericError = Throwable("other Error")
-        exceptionU = HttpException(`set Code to Response Error`(422))
-        exceptionT = HttpException(`set Code to Response Error`(403))
+        exceptionU = HttpException(`set code to response error`(422))
+        exceptionT = HttpException(`set code to response error`(403))
     }
 
 
     @Test
-    fun `error generico devuelve error desconcocido`() {
+    fun `generic error returns unknown error`() =
         assertEquals(genericError.toGitHubByPageError(), GitHubByPageError.Unknown)
-    }
+
 
     @Test
-    fun `excepecion http 422 devuelve error unprocesable`() {
+    fun `http exception 422 returns unprocessed error`() =
         assertEquals(exceptionU.toGitHubByPageError(), GitHubByPageError.UnprocessableEntity)
-    }
+
 
     @Test
-    fun `excepecion http 403 devuelve error de muchas solicitudes XD`() {
+    fun `http 403 exception returns error from many requests`() =
         assertEquals(exceptionT.toGitHubByPageError(), GitHubByPageError.TooManyRequest)
-    }
 
-    private fun `set Code to Response Error`(int: Int): Response<GithubAPIService> {
-        body = ResponseBody.create(mediaType, "test error")
-        return Response.error(int, body)
-    }
 }
