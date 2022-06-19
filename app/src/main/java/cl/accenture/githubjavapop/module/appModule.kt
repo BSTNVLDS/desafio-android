@@ -1,4 +1,4 @@
-package cl.accenture.githubjavapop
+package cl.accenture.githubjavapop.module
 
 import cl.accenture.githubjavapop.connection.GithubAPIService
 import cl.accenture.githubjavapop.viewmodel.HomeViewModel
@@ -14,8 +14,6 @@ val appModule = module {
             .addConverterFactory(GsonConverterFactory.create())
             .build().create(GithubAPIService::class.java)
     }
-
-
     viewModel {
         HomeViewModel(get())
     }
