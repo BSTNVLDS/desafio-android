@@ -87,6 +87,7 @@
                     android:src="@mipmap/ic_app_foreground" />
 
                 <TextView
+                    android:paddingRight="10dp"
                     android:id="@+id/txtConnection"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

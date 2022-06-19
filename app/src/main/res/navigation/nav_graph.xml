@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="cl.accenture.githubjavapop.view.HomeFragment"
+        android:name="cl.accenture.githubjavapop.view.fragment.HomeFragment"
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_pullRequestsFragment"
@@ -15,7 +15,7 @@
     </fragment>
     <fragment
         android:id="@+id/pullRequestsFragment"
-        android:name="cl.accenture.githubjavapop.view.PullRequestsFragment"
+        android:name="cl.accenture.githubjavapop.view.fragment.PullRequestsFragment"
         tools:layout="@layout/fragment_pull_requests">
 
     </fragment>
