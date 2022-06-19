@@ -1,43 +1,55 @@
 package cl.accenture.githubjavapop.viewmodel
 
-import android.content.Context
 import android.net.ConnectivityManager
+import androidx.lifecycle.MutableLiveData
 import cl.accenture.githubjavapop.connection.GithubAPIService
+import cl.accenture.githubjavapop.model.ApiState
+import cl.accenture.githubjavapop.model.GitHubByPageError
+import cl.accenture.githubjavapop.model.Repo
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
 
-class HomeViewModelTest{
+@RunWith(JUnit4::class)
+
+class HomeViewModelTest {
 
     @RelaxedMockK
-    private lateinit var viewModel:HomeViewModel
+    private lateinit var viewModel: HomeViewModel
+    @RelaxedMockK
     private lateinit var githubAPIService: GithubAPIService
-private lateinit var connectivityManager: ConnectivityManager
-    private lateinit var context: Context
+    @RelaxedMockK
+    private lateinit var connectivityManager: ConnectivityManager
+    @RelaxedMockK
+    private lateinit var stateRepoList :MutableLiveData<ApiState<List<Repo>, GitHubByPageError>>
 
     @Before
-    fun setUp(){
+    fun setUp() {
         MockKAnnotations.init(this)
-        connectivityManager=   context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-         viewModel = HomeViewModel(githubAPIService, connectivityManager )
-
+        viewModel = HomeViewModel(githubAPIService, connectivityManager)
     }
     @Test
-    fun isConnectionActive(){
-        /*
-        //given
-        val bol = true
-        every {   viewModel.stateRepoList} returns bol
-        //when
-        viewModel.stateRepoList
-        //then
-        verify(exactly = 1) { viewModel.stateRepoList }
-
-         */
+    fun demo() {
+        assert(true)
     }
+
+    @Test
+    fun isCon() {
+        //given
+        every {   viewModel.loadListByPage(1)} returns
+        //when
+        viewModel.loadListByPage(1)
+        //then
+        verify(exactly = 1) { viewModel.loadListByPage(1) }
+
+
+    }
+
 }
 
 
