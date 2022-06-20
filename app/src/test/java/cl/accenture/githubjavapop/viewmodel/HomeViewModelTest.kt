@@ -16,6 +16,7 @@ import io.mockk.coVerify
 import io.mockk.impl.annotations.RelaxedMockK
 import junit.framework.Assert.*
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -31,43 +32,34 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 class HomeViewModelTest {
-
-    @RelaxedMockK
-    private lateinit var githubAPIService: GithubAPIService
-
-    @RelaxedMockK
-    private lateinit var viewModel: HomeViewModel
-
     @get:Rule
     var rule: InstantTaskExecutorRule = InstantTaskExecutorRule()
 
-    // private lateinit var lista: MutableLiveData<ApiState<List<Repo>, GitHubByPageError>>
-    //  private lateinit var view: HomeFragment
+    @RelaxedMockK
+    private lateinit var githubAPIService: GithubAPIService
+    private lateinit var viewModel: HomeViewModel
+    private lateinit var mutablelist: MutableLiveData<ApiState<List<Repo>, GitHubByPageError>>
+    private lateinit var apiStateLoading: ApiState<List<Repo>, GitHubByPageError>
+    private lateinit var apiStateSuccessEmpty: ApiState<List<Repo>, GitHubByPageError>
+    private lateinit var apiStateError: ApiState<List<Repo>, GitHubByPageError>
+    @RelaxedMockK
+    private lateinit var genericError: Throwable
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
         viewModel = HomeViewModel(githubAPIService)
+        apiStateLoading = ApiState.Loading()
+        apiStateError = ApiState.Error(genericError.toGitHubByPageError())
+        apiStateSuccessEmpty= ApiState.Success(emptyList())
     }
 
     @Test
-    fun `devuelve sin estado`() {
-        assertNull(viewModel.stateRepoList.value)
-    }
-
-    @Test
-    fun `probar que se observa el view model`() {
-        //  view.onStart()
-        //  assertTrue(viewModel.stateRepoList.hasObservers())
-    }
-
-    @Test
-    fun `cuando se carga mande loadigin xd`() {
-        //   lista.postValue(ApiState.Loading())
-        //  val res = lista
-        // coEvery { viewModel.stateRepoList} returns res
+    fun `start in loading state`() = runBlocking {
+        mutablelist.postValue(apiStateLoading)
+        coEvery { viewModel.stateRepoList } returns mutablelist
         viewModel.loadListByPage(1)
-        verify { viewModel.loadListByPage(1) }
+        coVerify (exactly = 1){ viewModel.loadListByPage(1) }
     }
 
 }
