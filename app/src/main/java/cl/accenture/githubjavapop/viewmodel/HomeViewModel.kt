@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 class HomeViewModel(private val githubAPIService: GithubAPIService) : ViewModel() {
+
     val stateRepoList = MutableLiveData<ApiState<List<Repo>, GitHubByPageError>>()
 
     fun loadListByPage(page: Int) {
@@ -50,6 +51,5 @@ class HomeViewModel(private val githubAPIService: GithubAPIService) : ViewModel(
         }
         return tempList
     }
-
 
 }

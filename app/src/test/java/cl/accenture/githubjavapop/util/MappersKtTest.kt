@@ -9,6 +9,7 @@ import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import retrofit2.HttpException
 import retrofit2.Response
+import java.net.UnknownHostException
 
 
 internal class MappersKtTest {
@@ -16,6 +17,7 @@ internal class MappersKtTest {
     private lateinit var genericError: Throwable
     private lateinit var exceptionU: HttpException
     private lateinit var exceptionT: HttpException
+    private lateinit var exceptionN: UnknownHostException
 
     private fun `set code to response error`(int: Int): Response<GithubAPIService> {
         val body = ResponseBody.create(
@@ -31,19 +33,20 @@ internal class MappersKtTest {
         exceptionT = HttpException(`set code to response error`(403))
     }
 
-
     @Test
     fun `generic error returns unknown error`() =
         assertEquals(genericError.toGitHubByPageError(), GitHubByPageError.Unknown)
-
 
     @Test
     fun `http exception 422 returns unprocessed error`() =
         assertEquals(exceptionU.toGitHubByPageError(), GitHubByPageError.UnprocessableEntity)
 
-
     @Test
     fun `http 403 exception returns error from many requests`() =
         assertEquals(exceptionT.toGitHubByPageError(), GitHubByPageError.TooManyRequest)
+
+    @Test
+    fun `no connection returns error`() =
+        assertEquals(exceptionN.toGitHubByPageError(), GitHubByPageError.NoConnection)
 
 }
