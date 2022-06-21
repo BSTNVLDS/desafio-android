@@ -4,49 +4,40 @@ import cl.accenture.githubjavapop.connection.GithubAPIService
 import cl.accenture.githubjavapop.model.GitHubByPageError
 import okhttp3.MediaType
 import okhttp3.ResponseBody
-import org.junit.Before
+import org.junit.Assert
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.assertEquals
 import retrofit2.HttpException
 import retrofit2.Response
 import java.net.UnknownHostException
 
-
 internal class MappersKtTest {
 
-    private lateinit var genericError: Throwable
-    private lateinit var exceptionU: HttpException
-    private lateinit var exceptionT: HttpException
-    private lateinit var exceptionN: UnknownHostException
-
-    private fun `set code to response error`(int: Int): Response<GithubAPIService> {
-        val body = ResponseBody.create(
-            MediaType.parse("application/json; charset=utf-8"), "test error"
-        )
-        return Response.error(int, body)
-    }
-
-    @Before
-    fun setUp() {
-        genericError = Throwable("other Error")
-        exceptionU = HttpException(`set code to response error`(422))
-        exceptionT = HttpException(`set code to response error`(403))
-    }
+    private val genericError = Throwable("other Error")
+    private val exceptionU = HttpException(`set code to response error`(422))
+    private val exceptionT = HttpException(`set code to response error`(403))
+    private val exceptionN = UnknownHostException()
 
     @Test
     fun `generic error returns unknown error`() =
-        assertEquals(genericError.toGitHubByPageError(), GitHubByPageError.Unknown)
+        Assert.assertEquals(genericError.toGitHubByPageError(), GitHubByPageError.Unknown)
 
     @Test
     fun `http exception 422 returns unprocessed error`() =
-        assertEquals(exceptionU.toGitHubByPageError(), GitHubByPageError.UnprocessableEntity)
+        Assert.assertEquals(exceptionU.toGitHubByPageError(), GitHubByPageError.UnprocessableEntity)
 
     @Test
     fun `http 403 exception returns error from many requests`() =
-        assertEquals(exceptionT.toGitHubByPageError(), GitHubByPageError.TooManyRequest)
+        Assert.assertEquals(exceptionT.toGitHubByPageError(), GitHubByPageError.TooManyRequest)
 
     @Test
     fun `no connection returns error`() =
-        assertEquals(exceptionN.toGitHubByPageError(), GitHubByPageError.NoConnection)
+        Assert.assertEquals(exceptionN.toGitHubByPageError(), GitHubByPageError.NoConnection)
 
+    private fun `set code to response error`(int: Int): Response<GithubAPIService> {
+        val body = ResponseBody.create(
+            MediaType.parse("application/json; charset=utf-8"),
+            "test error"
+        )
+        return Response.error(int, body)
+    }
 }

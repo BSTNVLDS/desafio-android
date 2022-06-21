@@ -1,66 +1,110 @@
 package cl.accenture.githubjavapop.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import cl.accenture.githubjavapop.connection.GithubAPIService
+import cl.accenture.githubjavapop.connection.GithubResponse
 import cl.accenture.githubjavapop.model.ApiState
-import cl.accenture.githubjavapop.model.GitHubByPageError
+import cl.accenture.githubjavapop.model.Owner
 import cl.accenture.githubjavapop.model.Repo
-import cl.accenture.githubjavapop.util.toGitHubByPageError
-import cl.accenture.githubjavapop.view.fragment.HomeFragment
-import io.mockk.MockKAnnotations
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.impl.annotations.RelaxedMockK
-import junit.framework.Assert.*
+import io.mockk.*
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runTest
+import okhttp3.MediaType
+import okhttp3.ResponseBody
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
-import org.mockito.Mock
-import org.mockito.Mockito.doReturn
-import org.mockito.Mockito.verify
-import org.mockito.MockitoAnnotations
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-
+import retrofit2.Response
 
 class HomeViewModelTest {
     @get:Rule
-    var rule: InstantTaskExecutorRule = InstantTaskExecutorRule()
-
-    @RelaxedMockK
-    private lateinit var githubAPIService: GithubAPIService
-    private lateinit var viewModel: HomeViewModel
-    private lateinit var mutablelist: MutableLiveData<ApiState<List<Repo>, GitHubByPageError>>
-    private lateinit var apiStateLoading: ApiState<List<Repo>, GitHubByPageError>
-    private lateinit var apiStateSuccessEmpty: ApiState<List<Repo>, GitHubByPageError>
-    private lateinit var apiStateError: ApiState<List<Repo>, GitHubByPageError>
-    @RelaxedMockK
-    private lateinit var genericError: Throwable
+    val rule: InstantTaskExecutorRule = InstantTaskExecutorRule()
+    private val githubAPIService = mockk<GithubAPIService>()
+    private val viewModel by lazy { HomeViewModel(githubAPIService) }
 
     @Before
-    fun setUp() {
-        MockKAnnotations.init(this)
-        viewModel = HomeViewModel(githubAPIService)
-        apiStateLoading = ApiState.Loading()
-        apiStateError = ApiState.Error(genericError.toGitHubByPageError())
-        apiStateSuccessEmpty= ApiState.Success(emptyList())
+    fun setUp() = MockKAnnotations.init(this)
+
+    @Test
+    fun `basic test mock response of github by page(1 execute)`() {
+        val mockResponse = `mock response`()
+        every { `github by page method`() } returns mockResponse
+        `github by page method`()
+        verify(exactly = 1) { `github by page method`() }
+        Assert.assertEquals(`github by page method`().body(), mockResponse.body())
     }
 
     @Test
-    fun `start in loading state`() = runBlocking {
-        mutablelist.postValue(apiStateLoading)
-        coEvery { viewModel.stateRepoList } returns mutablelist
+    fun `basic test mock response of github by page(2 execute)`() {
+        every { `github by page method`() } returns `mock response`()
         viewModel.loadListByPage(1)
-        coVerify (exactly = 1){ viewModel.loadListByPage(1) }
+        verify(exactly = 1) { `github by page method`() }
+        Assert.assertTrue(
+            "mock response equals to success state",
+            viewModel.stateRepoList.value is ApiState.Success
+        )
     }
+
+    @Test
+    fun `basic test mock response of github by page(3 execute)`() {
+        every { `github by page method`() } returns `mock error response`()
+        viewModel.loadListByPage(1)
+        verify(exactly = 1) { `github by page method`() }
+        Assert.assertTrue(
+            "mock error response equals to error state",
+            viewModel.stateRepoList.value is ApiState.Error
+        )
+    }
+
+    @Test
+    fun `basic test mock response of github by page(5 execute)`() {
+        every { `github by page method`() } returns `mock empty response`()
+        viewModel.loadListByPage(1)
+        verify(exactly = 1) { `github by page method`() }
+        val success = viewModel.stateRepoList.value as ApiState.Success
+        val list = success.value
+        Assert.assertTrue(
+            "mock empty response equals to empty list",
+            list.isEmpty()
+        )
+    }
+
+
+    private fun `github by page method`() = runBlocking {
+        githubAPIService.getGithubByPage("language:Java", "stars", 1)
+    }
+
+    private fun `mock empty response`(): Response<GithubResponse> {
+        return Response.success(GithubResponse(listOf()))
+    }
+
+    private fun `mock error response`(): Response<GithubResponse> {
+        val body = ResponseBody.create(
+            MediaType.parse("application/json; charset=utf-8"), "error github by page"
+        )
+        return Response.error(422, body)
+    }
+
+    private fun `mock response`(): Response<GithubResponse> {
+        return Response.success(
+            GithubResponse(
+                listOf(
+                    Repo(
+                        name = "repository1",
+                        description = "desc info info",
+                        forks = "1",
+                        watchers = "1",
+                        owner = Owner(
+                            avatar_url = "http://www.google.com",
+                            login = "yo",
+                            name = "bastian"
+                        )
+                    )
+                )
+            )
+        )
+    }
+
 
 }
 
