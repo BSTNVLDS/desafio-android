@@ -13,46 +13,53 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
-class RequestPullListViewModel(private val githubAPIService : GithubAPIService) : ViewModel() {
-  private var state = true
-    private var page =1
+class RequestPullListViewModel(private val githubAPIService: GithubAPIService) : ViewModel() {
+    private var state = true
+    private var page = 1
     val statePullList = MutableLiveData<ApiState<List<Pull>, GitHubByPageError>>()
 
-    fun loadList(user: String,repo :String) {
+    fun loadList(user: String, repo: String) {
 
         CoroutineScope(Dispatchers.IO).launch {
-                statePullList.postValue(ApiState.Loading())
+            statePullList.postValue(ApiState.Loading())
             while (state) {
                 runCatching {
-                    githubAPIService.getPullByRepo(user, repo, 100, "all", page)
+                    githubAPIService.getPullByRepo(
+                        user = user,
+                        repo = repo,
+                        perPage = 100,
+                        state = "all",
+                        page = page
+                    )
                 }.onSuccess { response ->
                     if (response.isSuccessful) {
                         val tempList = response.body() ?: emptyList()
                         val parseList = tempList.map { Pull(it.title, it.body, it.state, it.user) }
                         val definitiveList = loadNameByLogin(parseList)
-                        if(definitiveList.isNotEmpty()){
+                        if (definitiveList.isNotEmpty()) {
                             statePullList.postValue(ApiState.Success(definitiveList))
                             page++
-                        }else{
-                            state=false
+                        } else {
+                            state = false
                         }
 
                     } else {
                         val error = HttpException(response).toGitHubByPageError()
                         statePullList.postValue(ApiState.Error(error))
-                        state=false
+                        state = false
                     }
                 }.onFailure { throwable ->
-                      val error = throwable.toGitHubByPageError()
+                    val error = throwable.toGitHubByPageError()
                     statePullList.postValue(ApiState.Error(error))
-                    state=false
+                    state = false
                 }
 
             }
         }
 
     }
-    private fun loadNameByLogin(tempList: List<Pull>):List<Pull> {
+
+    private fun loadNameByLogin(tempList: List<Pull>): List<Pull> {
         for (pull in tempList) {
             CoroutineScope(Dispatchers.IO).launch {
                 val call = githubAPIService.getNameByUser(pull.user.login)

@@ -71,7 +71,11 @@ class HomeViewModelTest {
 
 
     private fun `github by page method`() = runBlocking {
-        githubAPIService.getGithubByPage("language:Java", "stars", 1)
+        githubAPIService.getGithubByPage(
+            query = "language:Java",
+            sort = "stars",
+            page = 1
+        )
     }
 
     private fun `mock empty response`(): Response<GithubResponse> {

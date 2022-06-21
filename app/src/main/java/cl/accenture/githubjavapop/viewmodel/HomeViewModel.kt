@@ -17,25 +17,29 @@ class HomeViewModel(private val githubAPIService: GithubAPIService) : ViewModel(
     val stateRepoList = MutableLiveData<ApiState<List<Repo>, GitHubByPageError>>()
 
     fun loadListByPage(page: Int) {
-            CoroutineScope(Dispatchers.IO).launch {
-                stateRepoList.postValue(ApiState.Loading())
-                runCatching {
-                    githubAPIService.getGithubByPage("language:Java", "stars", page)
-                }.onSuccess { response ->
-                    if (response.isSuccessful) {
-                        val tempList = response.body()?.repo ?: emptyList()
-                        val definitiveList = loadNameByLogin(tempList)
-                        stateRepoList.postValue(ApiState.Success(definitiveList))
-                    } else {
-                        val error = HttpException(response).toGitHubByPageError()
-                        stateRepoList.postValue(ApiState.Error(error))
-                    }
-                }.onFailure { throwable ->
-                    val error = throwable.toGitHubByPageError()
+        CoroutineScope(Dispatchers.IO).launch {
+            stateRepoList.postValue(ApiState.Loading())
+            runCatching {
+                githubAPIService.getGithubByPage(
+                    query = "language:Java",
+                    sort = "stars",
+                    page = page
+                )
+            }.onSuccess { response ->
+                if (response.isSuccessful) {
+                    val tempList = response.body()?.repo ?: emptyList()
+                    val definitiveList = loadNameByLogin(tempList)
+                    stateRepoList.postValue(ApiState.Success(definitiveList))
+                } else {
+                    val error = HttpException(response).toGitHubByPageError()
                     stateRepoList.postValue(ApiState.Error(error))
                 }
-
+            }.onFailure { throwable ->
+                val error = throwable.toGitHubByPageError()
+                stateRepoList.postValue(ApiState.Error(error))
             }
+
+        }
 
     }
 
