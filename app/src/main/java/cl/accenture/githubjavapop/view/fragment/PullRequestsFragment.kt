@@ -14,6 +14,7 @@ import cl.accenture.githubjavapop.databinding.FragmentPullRequestsBinding
 import cl.accenture.githubjavapop.model.ApiState
 import cl.accenture.githubjavapop.model.GitHubByPageError
 import cl.accenture.githubjavapop.model.Pull
+import cl.accenture.githubjavapop.model.Repo
 import cl.accenture.githubjavapop.util.*
 import cl.accenture.githubjavapop.viewmodel.RequestPullListViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -26,16 +27,18 @@ class PullRequestsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val repo = arguments?.getString("repo").toString()
-        val user = arguments?.getString("user").toString()
-        addNavegation(repo)
+        val repoBundle = arguments ?: Bundle()
+        val fullRepo :Repo = repoBundle.getParcelable("full_repo") ?: Repo()
+        val repo = fullRepo.name
+        val user = fullRepo.owner.login
+        addNavigation(repo)
         binding.rcr.layoutManager = LinearLayoutManager(context)
         binding.rcr.adapter = adapter
         pullViewModel.statePullList.observe(this, ::pullListObserver)
         pullViewModel.loadList(user, repo)
     }
 
-    private fun addNavegation(repoName :String) {
+    private fun addNavigation(repoName :String) {
         binding.toolbarPull.title = repoName
         binding.toolbarPull.navigationIcon = getDrawable(resources, R.drawable.ico_back, null)
         binding.toolbarPull.setNavigationOnClickListener {
@@ -54,14 +57,14 @@ class PullRequestsFragment : Fragment() {
     private fun pullListObserver(statePullList: ApiState<List<Pull>, GitHubByPageError>) {
         when (statePullList) {
             is ApiState.Error -> {
-                repoListErrorHandler(statePullList.error)
+                binding.txtConnection.text =repoListErrorHandler(statePullList.error)
                 setViewState(CONTENT_STATE_ERROR)
             }
             is ApiState.Loading -> setViewState(CONTENT_STATE_LOADING)
 
             is ApiState.Success -> {
                 if (statePullList.value.isEmpty()) {
-                    binding.txtConnection.setText(R.string.connectServerMessage)
+                    binding.txtConnection.text = EMPTY
                     setViewState(CONTENT_STATE_ERROR)
                 } else {
                     adapter.addList(statePullList.value)
@@ -70,19 +73,6 @@ class PullRequestsFragment : Fragment() {
                     setViewState(CONTENT_STATE_CONTENT)
                 }
             }
-        }
-    }
-
-    private fun repoListErrorHandler(error: GitHubByPageError) {
-        when (error) {
-            is GitHubByPageError.UnprocessableEntity ->
-                binding.txtConnection.setText(R.string.parametersNoCompleted)
-            is GitHubByPageError.TooManyRequest ->
-                binding.txtConnection.setText(R.string.exceededLimit)
-            is GitHubByPageError.Unknown ->
-                binding.txtConnection.setText(R.string.genericError)
-            is GitHubByPageError.NoConnection ->
-                binding.txtConnection.setText(R.string.noInternetMessage)
         }
     }
 

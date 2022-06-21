@@ -34,8 +34,7 @@ class HomeFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         return binding.root
@@ -47,8 +46,7 @@ class HomeFragment : Fragment() {
             val positionInList = binding.rc.getChildAdapterPosition(selectedChild)
             val selectRepo = adapter.list[positionInList]
             val bundle = Bundle()
-            bundle.putString("repo", selectRepo.name)
-            bundle.putString("user", selectRepo.owner.login)
+            bundle.putParcelable("fullRepo", selectRepo)
             binding.root.findNavController()
                 .navigate(R.id.action_homeFragment_to_pullRequestsFragment, bundle)
 
@@ -62,22 +60,20 @@ class HomeFragment : Fragment() {
                     homeViewModel.loadListByPage(page)
                 }
             }
-
         })
     }
-
 
     private fun repoListObserver(stateRepoList: ApiState<List<Repo>, GitHubByPageError>) {
         when (stateRepoList) {
             is ApiState.Error -> {
-                repoListErrorHandler(stateRepoList.error)
+                binding.txtConnection.text = repoListErrorHandler(stateRepoList.error)
                 setViewState(CONTENT_STATE_ERROR)
             }
             is ApiState.Loading -> setViewState(CONTENT_STATE_LOADING)
 
             is ApiState.Success -> {
                 if (stateRepoList.value.isEmpty()) {
-                    binding.txtConnection.setText(R.string.connectServerMessage)
+                    binding.txtConnection.text = EMPTY
                     setViewState(CONTENT_STATE_ERROR)
                 } else {
                     setViewState(CONTENT_STATE_CONTENT)
@@ -86,22 +82,9 @@ class HomeFragment : Fragment() {
             }
         }
     }
-
-    private fun repoListErrorHandler(error: GitHubByPageError) {
-        when (error) {
-            is GitHubByPageError.UnprocessableEntity ->
-                binding.txtConnection.setText(R.string.parametersNoCompleted)
-            is GitHubByPageError.TooManyRequest ->
-                binding.txtConnection.setText(R.string.exceededLimit)
-            is GitHubByPageError.Unknown ->
-                binding.txtConnection.setText(R.string.genericError)
-            is GitHubByPageError.NoConnection ->
-                binding.txtConnection.setText(R.string.noInternetMessage)
-        }
-    }
-
     private fun setViewState(state: Int) {
         binding.viewFliper.displayedChild = state
     }
+
 }
 
