@@ -65,12 +65,8 @@ class PullRequestsFragment : Fragment() {
                     setViewState(CONTENT_STATE_ERROR)
                 } else {
                     adapter.addList(statePullList.value)
-                    val openCount = adapter.open.size
-                    val closeCount = adapter.close.size
-                    val opensText = "$openCount Opens"
-                    val closedText = "$closeCount Closed"
-                    binding.opens.text = opensText
-                    binding.closed.text = closedText
+                    binding.opens.text = adapter.returnOpenPullCount()
+                    binding.closed.text = adapter.returnClosePullCount()
                     setViewState(CONTENT_STATE_CONTENT)
                 }
             }

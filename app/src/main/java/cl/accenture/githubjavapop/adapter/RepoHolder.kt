@@ -7,16 +7,16 @@ import cl.accenture.githubjavapop.model.Repo
 import com.squareup.picasso.Picasso
 
 class RepoHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
     private val binding = ItemRepoBinding.bind(itemView)
-    fun bind(repo: Repo){
+
+    fun bind(repo: Repo) {
         binding.name.text = repo.name
-        binding.descrip.text= repo.description
-        binding.stars.text= repo.watchers
-        binding.forks.text= repo.forks
-        binding.nameUser.text = repo.owner!!.name
-        binding.loginUser.text= repo.owner!!.login
-        Picasso.get().load(repo.owner!!.avatar_url).into(binding.imageg)
-
-
+        binding.descrip.text = repo.description
+        binding.stars.text = repo.watchers
+        binding.forks.text = repo.forks
+        binding.nameUser.text = repo.owner.name
+        binding.loginUser.text = repo.owner.login
+        Picasso.get().load(repo.owner.avatar_url).into(binding.imageg)
     }
 }

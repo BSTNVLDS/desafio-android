@@ -5,12 +5,14 @@ import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
 import cl.accenture.githubjavapop.R
+import cl.accenture.githubjavapop.databinding.FragmentHomeBinding
 import cl.accenture.githubjavapop.model.Repo
 
-class RepoAdapter :
-    RecyclerView.Adapter<RepoHolder>(), View.OnClickListener {
+class RepoAdapter : RecyclerView.Adapter<RepoHolder>(), View.OnClickListener {
+
     private var listener: View.OnClickListener? = null
     val list = mutableListOf<Repo>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepoHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_repo, parent, false)
@@ -20,7 +22,7 @@ class RepoAdapter :
 
     override fun onBindViewHolder(holder: RepoHolder, position: Int) = holder.bind(list[position])
 
-    fun setOnclickListener(listener: View.OnClickListener?) {
+    fun setOnclickListener(listener: View.OnClickListener) {
         this.listener = listener
     }
 
