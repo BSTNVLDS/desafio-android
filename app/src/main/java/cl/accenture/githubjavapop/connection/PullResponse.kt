@@ -9,5 +9,4 @@ data class PullResponse(
     @SerializedName("body") val body:String,
     @SerializedName("state") val state:String,
     @SerializedName("user") val user: Owner
-
 )
