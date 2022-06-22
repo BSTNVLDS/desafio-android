@@ -37,9 +37,9 @@ internal class RequestPullListViewModelTest {
     }
 
     @Test
-    fun `when a correct response is received the status changes to success`() {   //use while
-        every { `github by page method`() } returns `mock response`()             //and no mock state :(
-        viewModel.loadList("user", "repo")
+    fun `when a correct response is received the status changes to success`() {
+        every { `github by page method`() } returns `mock response`()
+        viewModel.loadListPullByPage("user", "repo",1)
         verify(exactly = 1) { `github by page method`() }
         Assert.assertTrue(
             "mock response equals to success state",
@@ -50,7 +50,7 @@ internal class RequestPullListViewModelTest {
     @Test
     fun `when an exception is received it changes the state to error`() {
         every { `github by page method`() } returns `mock error response`()
-        viewModel.loadList("user", "repo")
+        viewModel.loadListPullByPage("user", "repo",1)
         verify(exactly = 1) { `github by page method`() }
         Assert.assertTrue(
             "mock error response equals to error state",
@@ -61,7 +61,7 @@ internal class RequestPullListViewModelTest {
     @Test
     fun `empty response returns success and empty list`() {
         every { `github by page method`() } returns `mock empty response`()
-        viewModel.loadList("user", "repo")
+        viewModel.loadListPullByPage("user", "repo",1)
         verify(exactly = 1) { `github by page method`() }
         val success = viewModel.statePullList.value as ApiState.Success
         val list = success.value
@@ -75,7 +75,6 @@ internal class RequestPullListViewModelTest {
         githubAPIService.getPullByRepo(
             user = "user",
             repo = "repo",
-            perPage = 100,
             state = "all",
             page = 1
         )
@@ -93,7 +92,6 @@ internal class RequestPullListViewModelTest {
     }
 
     private fun `mock response`(): Response<List<PullResponse>> {
-        var listPullResponse = emptyList<PullResponse>()
         val pullResponse = PullResponse(
             title = "Fix 11111",
             body = "info info info",
@@ -104,7 +102,8 @@ internal class RequestPullListViewModelTest {
                 name = "name"
             )
         )
-        listPullResponse+=pullResponse
+        val listPullResponse = mutableListOf<PullResponse>()
+       listPullResponse+=pullResponse
         return Response.success(listPullResponse)
     }
 }

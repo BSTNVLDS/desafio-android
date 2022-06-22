@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat.getDrawable
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import cl.accenture.githubjavapop.R
 import cl.accenture.githubjavapop.adapter.PullAdapter
 import cl.accenture.githubjavapop.databinding.FragmentPullRequestsBinding
@@ -24,6 +25,7 @@ class PullRequestsFragment : Fragment() {
     private val pullViewModel by viewModel<RequestPullListViewModel>()
     private val binding by lazy { FragmentPullRequestsBinding.inflate(layoutInflater) }
     private val adapter = PullAdapter()
+    private var page = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +37,16 @@ class PullRequestsFragment : Fragment() {
         binding.rcr.layoutManager = LinearLayoutManager(context)
         binding.rcr.adapter = adapter
         pullViewModel.statePullList.observe(this, ::pullListObserver)
-        pullViewModel.loadList(user, repo)
+        pullViewModel.loadListPullByPage(user, repo,page)
+        binding.rcr.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!recyclerView.canScrollVertically(1)) {
+                    page++
+                    pullViewModel.loadListPullByPage(user, repo,page)
+                }
+            }
+        })
     }
 
     private fun addNavigation(repoName :String) {

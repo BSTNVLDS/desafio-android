@@ -13,7 +13,7 @@ class PullHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(pull: Pull) {
         binding.namePull.text = pull.title
         binding.bodyPull.text = pull.body
-        binding.namePull.text = pull.user.login
+        binding.nameUserpull.text = pull.user.name
         binding.loginUserpull.text = pull.user.login
         binding.state.text = pull.state
         Picasso.get().load(pull.user.avatar_url).into(binding.imagePull)
