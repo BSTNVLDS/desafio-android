@@ -1,6 +1,5 @@
 package cl.accenture.githubjavapop.viewmodel
 
-
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import cl.accenture.githubjavapop.connection.GithubAPIService
@@ -19,7 +18,6 @@ class RequestPullListViewModel(private val githubAPIService: GithubAPIService) :
     val statePullList = MutableLiveData<ApiState<List<Pull>, GitHubByPageError>>()
 
     fun loadList(user: String, repo: String) {
-
         CoroutineScope(Dispatchers.IO).launch {
             statePullList.postValue(ApiState.Loading())
             while (state) {
@@ -34,13 +32,14 @@ class RequestPullListViewModel(private val githubAPIService: GithubAPIService) :
                 }.onSuccess { response ->
                     if (response.isSuccessful) {
                         val tempList = response.body() ?: emptyList()
-                        val parseList = tempList.map { Pull(it.title, it.body, it.state, it.user) }
-                        val definitiveList = loadNameByLogin(parseList)
-                        if (definitiveList.isNotEmpty()) {
+                        if (tempList.isNotEmpty()) {
+                            val parseList = tempList.map { Pull(it.title, it.body, it.state, it.user) }
+                            val definitiveList = loadNameByLogin(parseList)
                             statePullList.postValue(ApiState.Success(definitiveList))
                             page++
                         } else {
-                            state = false
+                            statePullList.postValue(ApiState.Success(emptyList()))
+                            state=false
                         }
 
                     } else {
@@ -53,10 +52,8 @@ class RequestPullListViewModel(private val githubAPIService: GithubAPIService) :
                     statePullList.postValue(ApiState.Error(error))
                     state = false
                 }
-
             }
         }
-
     }
 
     private fun loadNameByLogin(tempList: List<Pull>): List<Pull> {
@@ -71,5 +68,4 @@ class RequestPullListViewModel(private val githubAPIService: GithubAPIService) :
         }
         return tempList
     }
-
 }
