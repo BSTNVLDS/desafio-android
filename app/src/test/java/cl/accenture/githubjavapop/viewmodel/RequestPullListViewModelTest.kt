@@ -28,7 +28,7 @@ internal class RequestPullListViewModelTest {
     fun setUp() = MockKAnnotations.init(this)
 
     @Test
-    fun `basic test mock response of github by page(1 execute)`() {
+    fun `receive a mock response from the server`() {
         val mockResponse = `mock response`()
         every { `github by page method`() } returns mockResponse
         `github by page method`()
@@ -37,8 +37,8 @@ internal class RequestPullListViewModelTest {
     }
 
     @Test
-    fun `basic test mock response of github by page(2 execute)`() {
-        every { `github by page method`() } returns `mock response`()
+    fun `when a correct response is received the status changes to success`() {   //use while
+        every { `github by page method`() } returns `mock response`()             //and no mock state :(
         viewModel.loadList("user", "repo")
         verify(exactly = 1) { `github by page method`() }
         Assert.assertTrue(
@@ -48,7 +48,7 @@ internal class RequestPullListViewModelTest {
     }
 
     @Test
-    fun `basic test mock response of github by page(3 execute)`() {
+    fun `when an exception is received it changes the state to error`() {
         every { `github by page method`() } returns `mock error response`()
         viewModel.loadList("user", "repo")
         verify(exactly = 1) { `github by page method`() }
@@ -59,7 +59,7 @@ internal class RequestPullListViewModelTest {
     }
 
     @Test
-    fun `basic test mock response of github by page(5 execute)`() {
+    fun `empty response returns success and empty list`() {
         every { `github by page method`() } returns `mock empty response`()
         viewModel.loadList("user", "repo")
         verify(exactly = 1) { `github by page method`() }
@@ -93,7 +93,7 @@ internal class RequestPullListViewModelTest {
     }
 
     private fun `mock response`(): Response<List<PullResponse>> {
-        val listPullResponse = emptyList<PullResponse>()
+        var listPullResponse = emptyList<PullResponse>()
         val pullResponse = PullResponse(
             title = "Fix 11111",
             body = "info info info",
@@ -104,7 +104,7 @@ internal class RequestPullListViewModelTest {
                 name = "name"
             )
         )
-        listPullResponse.plus(pullResponse)
+        listPullResponse+=pullResponse
         return Response.success(listPullResponse)
     }
 }

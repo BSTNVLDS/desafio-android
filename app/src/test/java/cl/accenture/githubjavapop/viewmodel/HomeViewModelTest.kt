@@ -26,7 +26,7 @@ class HomeViewModelTest {
     fun setUp() = MockKAnnotations.init(this)
 
     @Test
-    fun `basic test mock response of github by page(1 execute)`() {
+    fun `receive a mock response from the server`() {
         val mockResponse = `mock response`()
         every { `github by page method`() } returns mockResponse
         `github by page method`()
@@ -35,7 +35,7 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `basic test mock response of github by page(2 execute)`() {
+    fun `when a correct response is received the status changes to success`() {
         every { `github by page method`() } returns `mock response`()
         viewModel.loadListByPage(1)
         verify(exactly = 1) { `github by page method`() }
@@ -46,7 +46,7 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `basic test mock response of github by page(3 execute)`() {
+    fun `when an exception is received it changes the state to error`() {
         every { `github by page method`() } returns `mock error response`()
         viewModel.loadListByPage(1)
         verify(exactly = 1) { `github by page method`() }
@@ -57,7 +57,7 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `basic test mock response of github by page(5 execute)`() {
+    fun `empty response returns success and empty list`() {
         every { `github by page method`() } returns `mock empty response`()
         viewModel.loadListByPage(1)
         verify(exactly = 1) { `github by page method`() }
@@ -79,7 +79,7 @@ class HomeViewModelTest {
     }
 
     private fun `mock empty response`(): Response<GithubResponse> {
-        return Response.success(GithubResponse(listOf()))
+        return Response.success(null)
     }
 
     private fun `mock error response`(): Response<GithubResponse> {
@@ -108,8 +108,6 @@ class HomeViewModelTest {
             )
         )
     }
-
-
 }
 
 

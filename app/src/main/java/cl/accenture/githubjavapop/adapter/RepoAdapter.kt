@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
 import cl.accenture.githubjavapop.R
-import cl.accenture.githubjavapop.databinding.FragmentHomeBinding
 import cl.accenture.githubjavapop.model.Repo
 
 class RepoAdapter : RecyclerView.Adapter<RepoHolder>(), View.OnClickListener {
@@ -33,7 +32,7 @@ class RepoAdapter : RecyclerView.Adapter<RepoHolder>(), View.OnClickListener {
     override fun getItemCount() = list.size
 
     fun addList(repo: List<Repo>) {
-        this.list += repo
+        list+=repo
         notifyDataSetChanged()
     }
 }
