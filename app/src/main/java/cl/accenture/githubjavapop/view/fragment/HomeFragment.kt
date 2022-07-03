@@ -18,7 +18,6 @@ import cl.accenture.githubjavapop.util.*
 import cl.accenture.githubjavapop.viewmodel.HomeViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-
 class HomeFragment : Fragment() {
     private val homeViewModel by viewModel<HomeViewModel>()
     private val binding by lazy { FragmentHomeBinding.inflate(layoutInflater) }
@@ -77,6 +76,7 @@ class HomeFragment : Fragment() {
                     setViewState(CONTENT_STATE_ERROR)
                 } else {
                     setViewState(CONTENT_STATE_CONTENT)
+
                     adapter.addList(stateRepoList.value)
                 }
             }

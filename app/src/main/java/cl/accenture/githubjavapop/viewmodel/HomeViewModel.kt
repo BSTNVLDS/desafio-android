@@ -28,8 +28,8 @@ class HomeViewModel(private val githubAPIService: GithubAPIService) : ViewModel(
             }.onSuccess { response ->
                 if (response.isSuccessful) {
                     val tempList = response.body()?.repo ?: emptyList()
-                    val definitiveList = loadNameByLogin(tempList)
-                    stateRepoList.postValue(ApiState.Success(definitiveList))
+                  //  val definitiveList = loadNameByLogin(tempList)
+                    stateRepoList.postValue(ApiState.Success(tempList))
                 } else {
                     val error = HttpException(response).toGitHubByPageError()
                     stateRepoList.postValue(ApiState.Error(error))

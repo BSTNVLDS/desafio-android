@@ -1,12 +1,10 @@
 package cl.accenture.githubjavapop.viewmodel
 
-import android.util.Log
+import android.widget.ListAdapter
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import cl.accenture.githubjavapop.connection.GithubAPIService
-import cl.accenture.githubjavapop.model.ApiState
-import cl.accenture.githubjavapop.model.GitHubByPageError
-import cl.accenture.githubjavapop.model.Pull
+import cl.accenture.githubjavapop.model.*
 import cl.accenture.githubjavapop.util.toGitHubByPageError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +13,8 @@ import retrofit2.HttpException
 
 class RequestPullListViewModel(private val githubAPIService: GithubAPIService) : ViewModel() {
 
-    val statePullList = MutableLiveData<ApiState<List<Pull>, GitHubByPageError>>()
+    val statePullList = MutableLiveData<ApiState<List<PullRequestItem>, GitHubByPageError>>()
+    private var listPull= mutableListOf<Pull>()
 
     fun loadListPullByPage(user: String, repo: String, page: Int) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -31,9 +30,17 @@ class RequestPullListViewModel(private val githubAPIService: GithubAPIService) :
                 if (response.isSuccessful) {
                     val tempList = response.body() ?: emptyList()
                     if (tempList.isNotEmpty()) {
-                        val parseList = tempList.map { Pull(it.title, it.body, it.state, it.user) }
-                        val definitiveList = loadNameByLogin(parseList)
-                        statePullList.postValue(ApiState.Success(definitiveList))
+                        val parseList = tempList.map {
+                            Pull(
+                                it.title,
+                                it.body ?: "",
+                                it.state,
+                                it.user
+                            )
+                        }.toMutableList()
+                       // val definitiveList = loadNameByLogin(parseList)
+
+                        statePullList.postValue(ApiState.Success(pullToPullRequestItem(parseList)))
                     } else {
                         statePullList.postValue(ApiState.Success(emptyList()))
                     }
@@ -43,13 +50,32 @@ class RequestPullListViewModel(private val githubAPIService: GithubAPIService) :
                     statePullList.postValue(ApiState.Error(error))
                 }
             }.onFailure { throwable ->
-                Log.e("error",throwable.message.toString())
                 val error = throwable.toGitHubByPageError()
                 statePullList.postValue(ApiState.Error(error))
             }
         }
     }
+private  fun pullToPullRequestItem(list: List<Pull>):List<PullRequestItem>{
 
+    //open = parseList.first.size
+    //close = parseList.second.size
+    listPull+=list
+    val parseList = listPull.partition {it.state == "open"}
+    val openList:MutableList<PullRequestItem> = parseList.first.toMutableList()
+    val closeList :MutableList<PullRequestItem> = parseList.second.toMutableList()
+    val pullOpens =Title("Open Requests")
+    val pullClosed = Title("Close Requests")
+
+    if (openList.isNotEmpty()){
+        openList.add(0,pullOpens)
+    }
+    if (closeList.isNotEmpty()){
+        closeList.add(0,pullClosed)
+    }
+
+    return openList+closeList
+
+}
 
     private fun loadNameByLogin(tempList: List<Pull>): List<Pull> {
         for (pull in tempList) {
@@ -63,4 +89,5 @@ class RequestPullListViewModel(private val githubAPIService: GithubAPIService) :
         }
         return tempList
     }
+
 }

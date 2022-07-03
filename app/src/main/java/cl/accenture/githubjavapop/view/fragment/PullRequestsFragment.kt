@@ -12,10 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cl.accenture.githubjavapop.R
 import cl.accenture.githubjavapop.adapter.PullAdapter
 import cl.accenture.githubjavapop.databinding.FragmentPullRequestsBinding
-import cl.accenture.githubjavapop.model.ApiState
-import cl.accenture.githubjavapop.model.GitHubByPageError
-import cl.accenture.githubjavapop.model.Pull
-import cl.accenture.githubjavapop.model.Repo
+import cl.accenture.githubjavapop.model.*
 import cl.accenture.githubjavapop.util.*
 import cl.accenture.githubjavapop.viewmodel.RequestPullListViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -30,7 +27,7 @@ class PullRequestsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val repoBundle = arguments ?: Bundle()
-        val fullRepo :Repo = repoBundle.getParcelable("full_repo") ?: Repo()
+        val fullRepo :Repo = repoBundle.getParcelable("fullRepo") ?: Repo()
         val repo = fullRepo.name
         val user = fullRepo.owner.login
         addNavigation(repo)
@@ -65,7 +62,7 @@ class PullRequestsFragment : Fragment() {
         return binding.root
     }
 
-    private fun pullListObserver(statePullList: ApiState<List<Pull>, GitHubByPageError>) {
+    private fun pullListObserver(statePullList: ApiState<List<PullRequestItem>, GitHubByPageError>) {
         when (statePullList) {
             is ApiState.Error -> {
                 binding.txtConnection.text =repoListErrorHandler(statePullList.error)
@@ -79,6 +76,7 @@ class PullRequestsFragment : Fragment() {
                     setViewState(CONTENT_STATE_ERROR)
                 } else {
                     adapter.addList(statePullList.value)
+
                     binding.opens.text = adapter.returnOpenPullCount()
                     binding.closed.text = adapter.returnClosePullCount()
                     setViewState(CONTENT_STATE_CONTENT)

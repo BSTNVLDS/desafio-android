@@ -5,11 +5,11 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 class Repo(
-    var name: String = "",
-    var description: String = "",
-    var forks: String = "",
-    var watchers: String = "",
-    var owner: Owner = Owner()
+    val name: String = "",
+    val description: String = "",
+    val forks: String = "",
+    val watchers: String = "",
+    val owner: Owner = Owner()
 ):Parcelable
 
 

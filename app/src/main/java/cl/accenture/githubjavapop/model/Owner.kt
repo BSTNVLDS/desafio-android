@@ -5,7 +5,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 class Owner(
-    var avatar_url: String = "",
-    var login: String = "",
+    val avatar_url: String = "",
+    val login: String = "",
     var name: String = ""
 ):Parcelable
